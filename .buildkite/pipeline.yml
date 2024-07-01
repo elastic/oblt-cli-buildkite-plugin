@@ -1,2 +1,3 @@
 steps:
-  - command: echo "TODO"
+  - label: "E2E Test"
+    command: echo "TODO"

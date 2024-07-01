@@ -1,12 +1,16 @@
 # oblt-cli-buildkite-plugin
 
+A Buildkite plugin to set up oblt-cli
 
 ## Usage
 
 ```yaml
 steps:
-  - command: integration-test.sh
+  - command: oblt-cli cluster create serverless
+    env: 
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
     plugins:
       - elastic/oblt-cli#v1.0.0:
-          github-token: ${GITHUB_TOKEN}
+          version: 7.3.0
+
 ```

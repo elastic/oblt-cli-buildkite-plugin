@@ -16,5 +16,5 @@ OBLT_CLI_VERSION_FILE="${BUILDKITE_PLUGIN_OBLT_CLI_VERSION_FILE}"
 VERSION=$(get_version_from_file_or_fallback "${OBLT_CLI_VERSION_FILE}" "${OBLT_CLI_VERSION}")
 
 echo "~~~ :elastic-apm: Set up oblt-cli ${VERSION}"
-
 setup "${VERSION}" "${OBLT_CLI_USERNAME}" "${OBLT_CLI_SLACK_CHANNEL}" "${HOME}/.oblt-cli/bin"
+export GITHUB_TOKEN="${GH_TOKEN}"
