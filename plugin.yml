@@ -3,7 +3,6 @@ description: Grant pipelines access to Google Cloud resources using Workload Ide
 author: https://github.com/elastic
 public: true
 requirements:
-  - buildkite-agent
   - jq
   - curl
   - bash
