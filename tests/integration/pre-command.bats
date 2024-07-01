@@ -10,12 +10,12 @@ load "$BATS_PLUGIN_PATH/load.bash"
 	if [[ -z ${gh_token} ]]; then
 		tmp_dir=$(temp_make)
 		tar -czf "$tmp_dir/oblt-cli.tar.gz" --directory "$PWD/tests/fixtures" oblt-cli
-		version=$(jq -r '.tag_name' "$PWD/tests/fixtures/release.json")
+		version="${PWD}/tests/fixtures/.oblt-cli-version"
 		asset_id=$(jq -r '.assets | .[] | select(.name == "oblt-cli_7.3.0_linux_amd64.tar.gz") | .id' "$PWD/tests/fixtures/release.json")
 		echo "$asset_id"
 		stub curl \
-			"-sL -H \* -H \* -H \* https://api.github.com/repos/elastic/observability-test-environments/releases/tags/${version} : cat $PWD/tests/fixtures/release.json" \
-			"-sL -H \* -H \* -H \* https://api.github.com/repos/elastic/observability-test-environments/releases/assets/${asset_id} : cat $tmp_dir/oblt-cli.tar.gz"
+			"cat $PWD/tests/fixtures/release.json" \
+			"cat $tmp_dir/oblt-cli.tar.gz"
 	fi
 
 	stub git \
@@ -29,7 +29,7 @@ load "$BATS_PLUGIN_PATH/load.bash"
 	# assert
 	assert_success
 	if [[ -z ${gh_token} ]]; then
-		assert_output --partial "~~~ :elastic-apm: Set up oblt-cli 7.3.0"
+		assert_output --partial "~~~ :elastic-apm: Set up oblt-cli 7.2.2"
 		assert_output --partial "mocked oblt-cli output"
 	else
 		assert_output --partial "~~~ :elastic-apm: Set up oblt-cli 7.2.2"
