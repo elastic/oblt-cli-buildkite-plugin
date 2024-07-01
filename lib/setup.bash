@@ -4,10 +4,10 @@ set -euo pipefail
 
 CURR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# shellcheck source=lib/asset.bash
+# shellcheck disable=SC1091
 . "${CURR_DIR}/asset.bash"
 
-# shellcheck source=lib/version.bash
+# shellcheck disable=SC1091
 . "${CURR_DIR}/version.bash"
 
 # Downloads oblt-cli and configures it

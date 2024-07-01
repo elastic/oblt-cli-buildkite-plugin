@@ -4,7 +4,7 @@ set -euo pipefail
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# shellcheck source=lib/setup.bash
+# shellcheck disable=SC1091
 . "${DIR}/../lib/setup.bash"
 
 GH_TOKEN="${BUILDKITE_PLUGIN_OBLT_CLI_GITHUB_TOKEN:-${GH_TOKEN:-${GITHUB_TOKEN:-}}}"
