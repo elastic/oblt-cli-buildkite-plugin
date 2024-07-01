@@ -3,7 +3,7 @@ env:
 
 steps:
   - label: ":buildkite:	Upload E2E pipeline"
-    if: build.branch == 'main' || build.source == "trigger_job"
+    if: build.branch == 'main' || build.source == "ui"
     env:
       OBLT_CLI_VERSION: 7.3.0
     command: |
