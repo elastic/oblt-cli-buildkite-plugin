@@ -1,5 +1,3 @@
-
-
 steps:
   - label: "E2E - Create cluster"
     agents:
