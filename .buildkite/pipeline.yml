@@ -16,4 +16,4 @@ steps:
 
 notify:
   - slack: "#observablt-bots"
-    if: build.branch == "main" && build.state == "failed" && build.source != "trigger_job"
+    if: build.branch == "main" && build.state == "failed"
