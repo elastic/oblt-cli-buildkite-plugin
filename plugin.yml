@@ -1,0 +1,31 @@
+name: setup-oblt-cli
+description: Grant pipelines access to Google Cloud resources using Workload Identity Federation
+author: https://github.com/elastic
+public: true
+requirements:
+  - buildkite-agent
+  - jq
+  - curl
+  - bash
+  - tar
+configuration:
+  properties:
+    version:
+      type: string
+      description: The version of the plugin to use
+      default: 7.3.0
+    version-file:
+      type: string
+      description: The file to get the version from. Also supports .tool-versions
+    username:
+      type: string
+      description: The username to use for oblt-cli
+      default: obltmachine
+    slack-channel:
+      type: string
+      description: The Slack channel to post notifications to
+      default: "#observablt-bots"
+    github-token:
+      type: string
+      description: The GitHub token to use for oblt-cli
+  additionalProperties: false

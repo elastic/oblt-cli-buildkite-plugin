@@ -1,0 +1,27 @@
+services:
+  plugin-lint:
+    image: buildkite/plugin-linter
+    command: [ '--id', 'elastic/oblt-cli' ]
+    volumes:
+      - ".:/plugin:ro"
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ".:/plugin:ro"
+    environment:
+      - GH_TOKEN
+      - GITHUB_TOKEN
+    command: ['bats', 'tests/unit']
+
+  integration-test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ".:/plugin:ro"
+    environment:
+      - GH_TOKEN
+      - GITHUB_TOKEN
+    command: [ 'bats', 'tests/integration' ]
