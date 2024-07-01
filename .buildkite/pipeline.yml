@@ -3,6 +3,7 @@ env:
 
 steps:
   - label: ":buildkite:	Upload E2E pipeline"
+    if: build.branch == 'main' || build.source == "trigger_job"
     env:
       OBLT_CLI_VERSION: 7.3.0
     command: |
@@ -22,3 +23,6 @@ steps:
           command: buildkite-agent meta-data get cluster-name
       YAML
       
+notify:
+  - slack: "#observablt-bots"
+    if: build.branch == "main" && build.state == "failed" && build.source != "trigger_job"
