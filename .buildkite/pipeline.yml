@@ -1,4 +1,10 @@
 steps:
+  - label: integration-test with GITHUB_TOKEN
+    agents:
+      provider: gcp
+    command: make integration-test
+    env:
+      GITHUB_TOKEN: ${VAULT_GITHUB_TOKEN}
   - label: "E2E - Create cluster"
     agents:
       provider: gcp
