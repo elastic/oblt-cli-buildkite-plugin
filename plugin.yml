@@ -8,6 +8,7 @@ requirements:
   - bash
   - tar
   - git
+  - buildkite-agent
 configuration:
   properties:
     version:

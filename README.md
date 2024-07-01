@@ -4,12 +4,12 @@ A Buildkite plugin to set up oblt-cli
 
 # Properties
 
-| Name            | Type     | Default            | Description                                  |
-|-----------------|----------|--------------------|----------------------------------------------|
-| `version`       | `string` | `7.3.0`            | The version of the oblt-cli to install       |
-| `version-file`  | `string` | -                  | The file to get the version from             |
-| `username`      | `string` | `obltmachine`      | The oblt-cli username                        |
-| `slack-channel` | `string` | `#observablt-bots` | The slack channel for oblt-cli notifications |
+| Name            | Type     | Default            | Description                                                                                                         |
+|-----------------|----------|--------------------|---------------------------------------------------------------------------------------------------------------------|
+| `version`       | `string` | `7.3.0`            | The version of the oblt-cli to install.                                                                             |
+| `version-file`  | `string` | -                  | The file to get the version from. If both `version` and `version-file` are provided, the plugin will use `version`. |
+| `username`      | `string` | `obltmachine`      | The oblt-cli username                                                                                               |
+| `slack-channel` | `string` | `#observablt-bots` | The slack channel for oblt-cli notifications                                                                        |
 
 ## Usage
 
