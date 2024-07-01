@@ -1,3 +1,19 @@
 steps:
-  - label: "E2E Test"
-    command: echo "TODO"
+  - label: "E2E - Create cluster"
+    agents:
+      provider: gcp
+    plugins:
+      - elastic/oblt-cli#${BUILDKITE_COMMIT}:
+          version: 7.3.0
+    command: .buildkite/scripts/create-cluster.sh
+    env:
+      GITHUB_TOKEN: ${VAULT_GITHUB_TOKEN}
+
+  - wait: ~
+
+  - label: "E2E - Get cluster name"
+    command: buildkite-agent meta-data get cluster-name
+
+notify:
+  - slack: "#observablt-bots"
+    if: build.branch == "main" && build.state == "failed"
