@@ -109,3 +109,19 @@ load "$BATS_PLUGIN_PATH/load.bash"
 	# cleanup
 	unstub git
 }
+
+@test "pre-command non-existent version file should fail" {
+	local gh_token=${GH_TOKEN:-${GITHUB_TOKEN}}
+	if [[ -z ${gh_token} ]]; then
+		skip
+	fi
+
+	# arrange
+
+	# act
+	run env BUILDKITE_PLUGIN_OBLT_CLI_VERSION_FILE="${PWD}/non-existent" "$PWD/hooks/pre-command"
+
+	# assert
+	assert_failure
+	assert_output "version-file not found: /plugin/non-existent"
+}
