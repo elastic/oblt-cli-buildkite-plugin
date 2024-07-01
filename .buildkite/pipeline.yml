@@ -5,6 +5,7 @@ steps:
     plugins:
       - elastic/oblt-cli#${BUILDKITE_COMMIT}:
           version: 7.3.0
+          version-file: .oblt-cli-version
     command: .buildkite/scripts/create-cluster.sh
     env:
       GITHUB_TOKEN: ${VAULT_GITHUB_TOKEN}
