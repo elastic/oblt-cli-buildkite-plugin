@@ -1,5 +1,5 @@
 name: setup-oblt-cli
-description: Grant pipelines access to Google Cloud resources using Workload Identity Federation
+description: Set up oblt-cli and use it in your command
 author: https://github.com/elastic
 public: true
 requirements:
