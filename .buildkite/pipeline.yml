@@ -1,11 +1,14 @@
+env:
+  GITHUB_TOKEN: ${VAULT_GITHUB_TOKEN}
+
 steps:
   - label: integration-test with GITHUB_TOKEN
     agents:
       provider: gcp
     command: make integration-test
-    env:
-      GITHUB_TOKEN: ${VAULT_GITHUB_TOKEN}
+
   - label: "E2E - Create cluster"
+    key: create-cluster
     agents:
       provider: gcp
     plugins:
@@ -13,12 +16,9 @@ steps:
           version: 7.3.0
           version-file: .oblt-cli-version
     command: .buildkite/scripts/create-cluster.sh
-    env:
-      GITHUB_TOKEN: ${VAULT_GITHUB_TOKEN}
-
-  - wait: ~
 
   - label: "E2E - Get cluster name"
+    depends_on: create-cluster
     command: buildkite-agent meta-data get cluster-name
 
 notify:
