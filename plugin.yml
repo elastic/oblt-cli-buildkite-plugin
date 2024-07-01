@@ -22,7 +22,4 @@ configuration:
     slack-channel:
       type: string
       description: The Slack channel to post notifications to
-    github-token:
-      type: string
-      description: The GitHub token to use for oblt-cli
   additionalProperties: false
