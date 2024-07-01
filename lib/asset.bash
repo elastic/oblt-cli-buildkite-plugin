@@ -2,6 +2,11 @@
 
 set -euo pipefail
 
+# Get the OS name
+# Arguments:
+#   $1: The system name - (optional)
+# Returns:
+#  The OS name compatible with the asset name
 function get_os() {
 	local -r system=${1:-$(uname -s)}
 	case "${system}" in
@@ -18,6 +23,11 @@ function get_os() {
 	esac
 }
 
+# Get the architecture name
+# Arguments:
+#   $1: The machine name - (optional)
+# Returns:
+#  The architecture name compatible with the asset name
 function get_arch() {
 	local -r machine=${1:-$(uname -m)}
 	case "${machine}" in
@@ -34,6 +44,13 @@ function get_arch() {
 	esac
 }
 
+# Get the asset name
+# Arguments:
+#   $1: The version
+#   $2: The system name - (optional)
+#   $3: The machine name - (optional)
+# Returns:
+#  The asset name
 function get_asset_name() {
 	local -r version=$1
 	local -r system=${2:-}
@@ -45,6 +62,11 @@ function get_asset_name() {
 	echo "oblt-cli_${version}_${os}_${arch}.tar.gz"
 }
 
+# Get the asset ID
+# Arguments:
+#   $1: The version
+# Returns:
+#  The asset ID
 function get_asset_id() {
 	local -r gh_token=${GH_TOKEN:-}
 	local -r version=$1
@@ -58,6 +80,12 @@ function get_asset_id() {
 	echo "$release" | jq -r --arg name "$asset_name" '.assets | .[] | select(.name == $name) | .id'
 }
 
+# Download the asset
+# Arguments:
+#   $1: The asset ID
+#   $2: The target directory
+# Returns:
+#  None
 function download_asset() {
 	local -r gh_token=${GH_TOKEN:-}
 	local -r asset_id=$1
@@ -67,5 +95,4 @@ function download_asset() {
 		-H "Authorization: Bearer ${gh_token}" \
 		-H "X-GitHub-Api-Version: 2022-11-28" \
 		"https://api.github.com/repos/elastic/observability-test-environments/releases/assets/${asset_id}" | tar -xz -C "$target_dir"
-	echo "$target_dir/oblt-cli"
 }

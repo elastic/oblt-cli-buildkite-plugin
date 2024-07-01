@@ -64,7 +64,6 @@ load "$PWD/lib/asset"
 	# assert
 	assert_success
 	assert_file_exist "$tmp_dir/oblt-cli"
-	assert_output "$tmp_dir/oblt-cli"
 
 	# cleanup
 	unstub curl
