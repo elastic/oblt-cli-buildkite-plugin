@@ -17,12 +17,13 @@ load "$BATS_PLUGIN_PATH/load.bash"
 			"-sL -H \* -H \* -H \* https://api.github.com/repos/elastic/observability-test-environments/releases/tags/${version} : cat $PWD/tests/fixtures/release.json" \
 			"-sL -H \* -H \* -H \* https://api.github.com/repos/elastic/observability-test-environments/releases/assets/${asset_id} : cat $tmp_dir/oblt-cli.tar.gz"
 	fi
+
+	stub git \
+		"config --global user.name \* : echo 'Setup git user.name'" \
+		"config --global user.email \* : echo 'Setup git user.email'"
+
 	# act
-	run env BUILDKITE_PLUGIN_OBLT_CLI_USERNAME="obltmachine" \
-		BUILDKITE_PLUGIN_OBLT_CLI_SLACK_CHANNEL="#observablt-bots" \
-		BUILDKITE_PLUGIN_OBLT_CLI_VERSION="" \
-		BUILDKITE_PLUGIN_OBLT_CLI_VERSION_FILE="${PWD}/tests/fixtures/.oblt-cli-version" \
-		BUILDKITE_PLUGIN_OBLT_CLI_GITHUB_TOKEN="${GH_TOKEN:-${GITHUB_TOKEN}}" \
+	run env BUILDKITE_PLUGIN_OBLT_CLI_VERSION_FILE="${PWD}/tests/fixtures/.oblt-cli-version" \
 		"$PWD/hooks/pre-command"
 
 	# assert
@@ -39,6 +40,7 @@ load "$BATS_PLUGIN_PATH/load.bash"
 		unstub curl
 		temp_del "$tmp_dir"
 	fi
+	unstub git
 }
 
 @test "pre-command version from input" {
@@ -58,12 +60,12 @@ load "$BATS_PLUGIN_PATH/load.bash"
 	else
 		version="7.2.5"
 	fi
+	stub git \
+		"config --global user.name \* : echo 'Setup git user.name'" \
+		"config --global user.email \* : echo 'Setup git user.email'"
+
 	# act
-	run env BUILDKITE_PLUGIN_OBLT_CLI_USERNAME="obltmachine" \
-		BUILDKITE_PLUGIN_OBLT_CLI_SLACK_CHANNEL="#observablt-bots" \
-		BUILDKITE_PLUGIN_OBLT_CLI_VERSION="${version}" \
-		BUILDKITE_PLUGIN_OBLT_CLI_VERSION_FILE="" \
-		BUILDKITE_PLUGIN_OBLT_CLI_GITHUB_TOKEN="${GH_TOKEN:-${GITHUB_TOKEN}}" \
+	run env BUILDKITE_PLUGIN_OBLT_CLI_VERSION="${version}" \
 		"$PWD/hooks/pre-command"
 
 	# assert
@@ -82,4 +84,5 @@ load "$BATS_PLUGIN_PATH/load.bash"
 		unstub curl
 		temp_del "$tmp_dir"
 	fi
+	unstub git
 }

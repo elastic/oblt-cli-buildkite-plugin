@@ -6,6 +6,7 @@ CURR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # shellcheck source=lib/asset.bash
 . "${CURR_DIR}/asset.bash"
+
 # shellcheck source=lib/version.bash
 . "${CURR_DIR}/version.bash"
 
@@ -25,7 +26,14 @@ function setup() {
 	local -r asset_id=$(get_asset_id "$version")
 	mkdir -p "${bin_dir}"
 	download_asset "$asset_id" "$bin_dir"
+
 	export PATH="${bin_dir}:${PATH}"
+	export GITHUB_TOKEN="${GH_TOKEN}"
+	export ELASTIC_APM_ENVIRONMENT="ci"
+
+	git config --global user.name "${username}"
+	git config --global user.email "${username}@users.noreply.github.com"
+
 	oblt-cli configure \
 		--git-http-mode \
 		--username="${username}" \

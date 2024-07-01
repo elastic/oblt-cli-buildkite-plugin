@@ -1,3 +1,24 @@
+env:
+  GITHUB_TOKEN: ${VAULT_GITHUB_TOKEN}
+
 steps:
-  - label: "E2E Test"
-    command: echo "TODO"
+  - label: ":buildkite:	Upload E2E pipeline"
+    env:
+      OBLT_CLI_VERSION: 7.3.0
+    command: |
+      buildkite-agent pipeline upload <<-YAML
+      steps:
+        - label: "E2E - Create cluster"
+          agents:
+            provider: gcp
+          plugins:
+            - elastic/oblt-cli#$${BUILDKITE_COMMIT}:
+                version: $${OBLT_CLI_VERSION}
+          command: .buildkite/scripts/create-cluster.sh
+        
+        - wait: ~
+        
+        - label: "E2E - Get cluster name"
+          command: buildkite-agent meta-data get cluster-name
+      YAML
+      
