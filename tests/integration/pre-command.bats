@@ -20,10 +20,6 @@ export OBLT_CLI_BIN="${HOME}/.oblt-cli/bin"
 			"cat $tmp_dir/oblt-cli.tar.gz"
 	fi
 
-	stub git \
-		"config --global user.name \* : echo 'Setup git user.name'" \
-		"config --global user.email \* : echo 'Setup git user.email'"
-
 	# act
 	run env BUILDKITE_PLUGIN_OBLT_CLI_VERSION_FILE="${PWD}/tests/fixtures/.oblt-cli-version" \
 		"$PWD/hooks/pre-command"
@@ -42,7 +38,6 @@ export OBLT_CLI_BIN="${HOME}/.oblt-cli/bin"
 		unstub curl
 		temp_del "$tmp_dir"
 	fi
-	unstub git
 }
 
 @test "pre-command version from input" {
@@ -62,9 +57,6 @@ export OBLT_CLI_BIN="${HOME}/.oblt-cli/bin"
 	else
 		version="7.2.5"
 	fi
-	stub git \
-		"config --global user.name \* : echo 'Setup git user.name'" \
-		"config --global user.email \* : echo 'Setup git user.email'"
 
 	# act
 	run env BUILDKITE_PLUGIN_OBLT_CLI_VERSION="${version}" \
@@ -86,7 +78,6 @@ export OBLT_CLI_BIN="${HOME}/.oblt-cli/bin"
 		unstub curl
 		temp_del "$tmp_dir"
 	fi
-	unstub git
 }
 
 @test "pre-command default version" {
@@ -95,9 +86,6 @@ export OBLT_CLI_BIN="${HOME}/.oblt-cli/bin"
 		skip
 	fi
 	# arrange
-	stub git \
-		"config --global user.name \* : echo 'Setup git user.name'" \
-		"config --global user.email \* : echo 'Setup git user.email'"
 
 	# act
 	run "$PWD/hooks/pre-command"
@@ -107,9 +95,6 @@ export OBLT_CLI_BIN="${HOME}/.oblt-cli/bin"
 	assert_success
 	assert_output --partial "~~~ :elastic-apm: Set up oblt-cli ${version}"
 	assert_output --partial "Writing configuration file /home/plugin-tester/.oblt-cli/config.yaml"
-
-	# cleanup
-	unstub git
 }
 
 @test "pre-command non-existent version file should fail" {

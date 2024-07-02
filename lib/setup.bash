@@ -26,10 +26,6 @@ function setup() {
 	local -r asset_id=$(get_asset_id "$version")
 	mkdir -p "${bin_dir}"
 	download_asset "$asset_id" "$bin_dir"
-
-	git config --global user.name "${GIT_USER:-"${username}"}"
-	git config --global user.email "${GIT_EMAIL:-"${username}@users.noreply.github.com"}"
-
 	"${bin_dir}"/oblt-cli configure \
 		--git-http-mode \
 		--username="${username}" \
