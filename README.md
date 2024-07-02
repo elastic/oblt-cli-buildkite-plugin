@@ -1,6 +1,11 @@
 # oblt-cli-buildkite-plugin
 
-A Buildkite plugin to set up oblt-cli
+A Buildkite plugin to set up oblt-cli.
+
+> [!NOTE]
+> This plugin does not provide a way to automatically download the latest version of `oblt-cli` to ensure that the used version is stable and the plugin is reproducible.
+> If you don't provide both the `version` or `version-file` input, then the default version defined in [.default-oblt-cli-version](.default-oblt-cli-version) will be used.
+> The default version will be updated by updatecli when a new version of `oblt-cli` is available. Only maintainers will decide to merge the PR created by updatecli to update the version.
 
 # Properties
 
