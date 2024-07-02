@@ -30,6 +30,9 @@ function setup() {
 	git config --global user.name "${GIT_USER:-"${username}"}"
 	git config --global user.email "${GIT_EMAIL:-"${username}@users.noreply.github.com"}"
 
+	git config --global credential.helper store
+	echo "https://${GITHUB_TOKEN}:@github.com" >~/.git-credentials
+
 	"${bin_dir}"/oblt-cli configure \
 		--git-http-mode \
 		--username="${username}" \
