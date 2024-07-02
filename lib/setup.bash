@@ -27,10 +27,6 @@ function setup() {
 	mkdir -p "${bin_dir}"
 	download_asset "$asset_id" "$bin_dir"
 
-	export PATH="${bin_dir}:${PATH}"
-	export GITHUB_TOKEN="${GH_TOKEN}"
-	export ELASTIC_APM_ENVIRONMENT="ci"
-
 	git config --global user.name "${GIT_USER:-"${username}"}"
 	git config --global user.email "${GIT_EMAIL:-"${username}@users.noreply.github.com"}"
 
