@@ -2,7 +2,7 @@
 
 load "$BATS_PLUGIN_PATH/load.bash"
 
-export OBLT_CLI_BIN_DIR="${HOME}/.oblt-cli/bin"
+export OBLT_CLI_BIN="${HOME}/.oblt-cli/bin"
 
 @test "pre-command version from file" {
 	# arrange

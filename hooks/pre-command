@@ -15,4 +15,4 @@ OBLT_CLI_VERSION_FILE="${BUILDKITE_PLUGIN_OBLT_CLI_VERSION_FILE:-"${DIR}/../.def
 
 VERSION=$(get_version_from_input_or_file "${OBLT_CLI_VERSION}" "${OBLT_CLI_VERSION_FILE}")
 echo "~~~ :elastic-apm: Set up oblt-cli ${VERSION}"
-setup "${VERSION}" "${OBLT_CLI_USERNAME}" "${OBLT_CLI_SLACK_CHANNEL}" "${OBLT_CLI_BIN_DIR}"
+setup "${VERSION}" "${OBLT_CLI_USERNAME}" "${OBLT_CLI_SLACK_CHANNEL}" "${OBLT_CLI_BIN}"
