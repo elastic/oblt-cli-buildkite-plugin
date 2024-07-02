@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+vault_github_token_path="kv/ci-shared/observability-ci/github-bot-user"
+GH_TOKEN=$(vault kv get -field=token "${vault_github_token_path}")
+GIT_USER=$(vault kv get -field=username "${vault_github_token_path}")
+GIT_EMAIL=$(vault kv get -field=email "${vault_github_token_path}")
+GITHUB_TOKEN=${GH_TOKEN}
+export GIT_USER GIT_EMAIL GH_TOKEN GITHUB_TOKEN
