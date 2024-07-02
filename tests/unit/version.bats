@@ -24,7 +24,7 @@ load "$PWD/lib/version"
 
 	# assert
 	assert_success
-	assert_output "7.3.0"
+	assert_output "7.2.2"
 }
 
 @test "Get version from input or file should return input when both are provided" {
@@ -51,7 +51,7 @@ load "$PWD/lib/version"
 
 	# assert
 	assert_success
-	assert_output "7.3.0"
+	assert_output "7.2.2"
 }
 
 @test "Get version from input or or file should fail if file does not exist and when input is empty" {
