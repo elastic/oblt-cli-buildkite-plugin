@@ -31,8 +31,8 @@ function setup() {
 	export GITHUB_TOKEN="${GH_TOKEN}"
 	export ELASTIC_APM_ENVIRONMENT="ci"
 
-	git config --global user.name "${username}"
-	git config --global user.email "${username}@users.noreply.github.com"
+	git config --global user.name "${GIT_USER:-"${username}"}"
+	git config --global user.email "${GIT_EMAIL:-"${username}@users.noreply.github.com"}"
 
 	oblt-cli configure \
 		--git-http-mode \
