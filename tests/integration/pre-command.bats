@@ -2,6 +2,8 @@
 
 load "$BATS_PLUGIN_PATH/load.bash"
 
+export OBLT_CLI_BIN_DIR="${HOME}/.oblt-cli/bin"
+
 @test "pre-command version from file" {
 	# arrange
 	local tmp_dir

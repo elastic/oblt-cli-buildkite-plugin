@@ -30,7 +30,7 @@ function setup() {
 	git config --global user.name "${GIT_USER:-"${username}"}"
 	git config --global user.email "${GIT_EMAIL:-"${username}@users.noreply.github.com"}"
 
-	oblt-cli configure \
+	"${bin_dir}"/oblt-cli configure \
 		--git-http-mode \
 		--username="${username}" \
 		--slack-channel="${slack_channel}"
