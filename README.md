@@ -7,6 +7,7 @@ A Buildkite plugin to set up oblt-cli.
 > If you don't provide both the `version` or `version-file` input, then the default version defined in [.default-oblt-cli-version](.default-oblt-cli-version) will be used.
 > The default version will be updated by updatecli when a new version of `oblt-cli` is available. Only maintainers will decide to merge the PR created by updatecli to update the version.
 
+## Properties
 | Name            | Type     | Default            | Description                                                                                                         |
 |-----------------|----------|--------------------|---------------------------------------------------------------------------------------------------------------------|
 | `version`       | `string` | `7.3.0`            | The version of the oblt-cli to install.                                                                             |
@@ -23,7 +24,7 @@ steps:
       provider: gcp # currently only works on the gcp provider
     plugins:
       - elastic/oblt-cli#v1.0.0:
-          version: 7.3.0
+          version-file: .tool-versions
 
 ```
 
