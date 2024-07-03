@@ -1,6 +1,6 @@
 # oblt-cli-buildkite-plugin
 
-A Buildkite plugin to set up oblt-cli
+A Buildkite plugin to set up oblt-cli.
 
 ## Properties
 
@@ -32,7 +32,14 @@ The token can be set in the following environment variables:
 - `GITHUB_TOKEN`
 - `VAULT_GITHUB_TOKEN`
 
+> [!NOTE]
+> The `VAULT_GITHUB_TOKEN` is set by default.
+
 If multiple are set, the plugin will use the first one it finds in the order they are listed.
+
+> [!WARNING]
+> This plugin modifies the git credentials. If you provide a token other than the default, make sure it has the necessary permissions
+> to perform the actions required by the command where this plugin is used.
 
 ### Permissions
 The plugin requires the following GitHub token permissions in the [elastic/observability-test-environments](https://github.com/elastic/observability-test-environments) repository:
