@@ -42,7 +42,7 @@ load "$PWD/lib/asset"
 	stub curl "cat $PWD/tests/fixtures/release.json"
 
 	# act
-	run get_asset_id "7.3.0"
+	run get_asset_id "7.3.0" "fake-token"
 
 	# assert
 	assert_success
@@ -59,7 +59,7 @@ load "$PWD/lib/asset"
 	stub curl "cat $tmp_dir/oblt-cli.tar.gz"
 
 	# act
-	run download_asset "176068054" "$tmp_dir"
+	run download_asset "176068054" "$tmp_dir" "fake-token"
 
 	# assert
 	assert_success
