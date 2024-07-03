@@ -85,6 +85,7 @@ function get_asset_id() {
 # Arguments:
 #   $1: The asset ID
 #   $2: The target directory
+#   $3: The GitHub token
 # Returns:
 #  None
 function download_asset() {
