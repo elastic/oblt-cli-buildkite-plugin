@@ -7,7 +7,7 @@ A Buildkite plugin to set up oblt-cli
 > you will need to set up the git configuration and authenticate with GitHub.
 > This is required because `oblt-cli` pushes to the `elastic/observability-test-environments` repository.
 >
-> The following example demonstrate hot to set up the git configuration and authenticate with GitHub using gh CLI:
+> The following example demonstrates how to set up the git configuration and authenticate with GitHub using gh CLI:
 > ```shell
 > git config --global user.name "${GIT_USER}"
 > git config --global user.email "${GIT_EMAIL}"
