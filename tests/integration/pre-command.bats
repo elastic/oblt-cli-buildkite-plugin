@@ -15,7 +15,7 @@ stub_git() {
 @test "pre-command version from file" {
 	# arrange
 	local tmp_dir
-	local gh_token=${GH_TOKEN:-${GITHUB_TOKEN}}
+	local gh_token=${GH_TOKEN:-${GITHUB_TOKEN:-$VAULT_GITHUB_TOKEN}}
 
 	stub_git
 
@@ -57,7 +57,7 @@ stub_git() {
 	# arrange
 	local tmp_dir
 	# shellcheck disable=SC2031
-	local gh_token=${GH_TOKEN:-${GITHUB_TOKEN}}
+	local gh_token=${GH_TOKEN:-${GITHUB_TOKEN:-$VAULT_GITHUB_TOKEN}}
 	local version
 	if [[ -z ${gh_token} ]]; then
 		# shellcheck disable=SC2031
@@ -102,7 +102,7 @@ stub_git() {
 
 @test "pre-command default version" {
 	# shellcheck disable=SC2031
-	local gh_token=${GH_TOKEN:-${GITHUB_TOKEN}}
+	local gh_token=${GH_TOKEN:-${GITHUB_TOKEN:-$VAULT_GITHUB_TOKEN}}
 	if [[ -z ${gh_token} ]]; then
 		skip
 	fi
@@ -124,7 +124,7 @@ stub_git() {
 
 @test "pre-command non-existent version file should fail" {
 	# shellcheck disable=SC2031
-	local gh_token=${GH_TOKEN:-${GITHUB_TOKEN}}
+	local gh_token=${GH_TOKEN:-${GITHUB_TOKEN:-$VAULT_GITHUB_TOKEN}}
 	if [[ -z ${gh_token} ]]; then
 		skip
 	fi
