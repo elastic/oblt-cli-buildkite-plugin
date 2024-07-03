@@ -23,9 +23,10 @@ function setup() {
 	local -r username=$2
 	local -r slack_channel=$3
 	local -r bin_dir=$4
-	local -r asset_id=$(get_asset_id "$version")
+	local -r gh_token=$5
+	local -r asset_id=$(get_asset_id "$version" "$gh_token")
 	mkdir -p "${bin_dir}"
-	download_asset "$asset_id" "$bin_dir"
+	download_asset "$asset_id" "$bin_dir" "$gh_token"
 	"${bin_dir}"/oblt-cli configure \
 		--git-http-mode \
 		--username="${username}" \

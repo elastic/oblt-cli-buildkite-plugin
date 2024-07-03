@@ -65,11 +65,12 @@ function get_asset_name() {
 # Get the asset ID
 # Arguments:
 #   $1: The version
+#   $2: The GitHub token
 # Returns:
 #  The asset ID
 function get_asset_id() {
-	local -r gh_token=${GH_TOKEN:-}
 	local -r version=$1
+	local -r gh_token=$2
 	local -r asset_name=$(get_asset_name "$version")
 	local release
 	release=$(curl -sL \
@@ -87,9 +88,9 @@ function get_asset_id() {
 # Returns:
 #  None
 function download_asset() {
-	local -r gh_token=${GH_TOKEN:-}
 	local -r asset_id=$1
 	local -r target_dir=$2
+	local -r gh_token=$3
 	curl -sL \
 		-H "Accept: application/octet-stream" \
 		-H "Authorization: Bearer ${gh_token}" \
