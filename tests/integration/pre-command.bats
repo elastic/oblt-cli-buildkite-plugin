@@ -20,6 +20,8 @@ stub_git() {
 	stub_git
 
 	if [[ -z ${gh_token} ]]; then
+		# shellcheck disable=SC2030
+		export GH_TOKEN="mocked"
 		tmp_dir=$(temp_make)
 		tar -czf "$tmp_dir/oblt-cli.tar.gz" --directory "$PWD/tests/fixtures" oblt-cli
 		version="${PWD}/tests/fixtures/.oblt-cli-version"
@@ -54,9 +56,13 @@ stub_git() {
 @test "pre-command version from input" {
 	# arrange
 	local tmp_dir
+	# shellcheck disable=SC2031
 	local gh_token=${GH_TOKEN:-${GITHUB_TOKEN}}
 	local version
 	if [[ -z ${gh_token} ]]; then
+		# shellcheck disable=SC2031
+		# shellcheck disable=SC2030
+		export GH_TOKEN="mocked"
 		tmp_dir=$(temp_make)
 		tar -czf "$tmp_dir/oblt-cli.tar.gz" --directory "$PWD/tests/fixtures" oblt-cli
 		version=$(jq -r '.tag_name' "$PWD/tests/fixtures/release.json")
@@ -95,6 +101,7 @@ stub_git() {
 }
 
 @test "pre-command default version" {
+	# shellcheck disable=SC2031
 	local gh_token=${GH_TOKEN:-${GITHUB_TOKEN}}
 	if [[ -z ${gh_token} ]]; then
 		skip
@@ -116,6 +123,7 @@ stub_git() {
 }
 
 @test "pre-command non-existent version file should fail" {
+	# shellcheck disable=SC2031
 	local gh_token=${GH_TOKEN:-${GITHUB_TOKEN}}
 	if [[ -z ${gh_token} ]]; then
 		skip
@@ -128,7 +136,7 @@ stub_git() {
 
 	# assert
 	assert_failure
-	assert_output "version-file not found: /plugin/non-existent"
+	assert_output --partial "version-file not found: /plugin/non-existent"
 
 	# cleanup
 	unstub git
