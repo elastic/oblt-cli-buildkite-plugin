@@ -4,7 +4,7 @@ env:
 steps:
   - label: integration-test with GITHUB_TOKEN
     agents:
-      image: "gcr.io/kaniko-project/executor:latest"
+      provider: gcp
     command: make integration-test
 
   - label: "E2E - Create cluster"
