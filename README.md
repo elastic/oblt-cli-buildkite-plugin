@@ -8,12 +8,12 @@ A Buildkite plugin to set up oblt-cli.
 > The default version will be updated by updatecli when a new version of `oblt-cli` is available. Only maintainers will decide to merge the PR created by updatecli to update the version.
 
 ## Properties
-| Name            | Type     | Default            | Description                                                                                                         |
-|-----------------|----------|--------------------|---------------------------------------------------------------------------------------------------------------------|
-| `version`       | `string` | `7.3.0`            | The version of the oblt-cli to install.                                                                             |
-| `version-file`  | `string` | -                  | The file to get the version from. If both `version` and `version-file` are provided, the plugin will use `version`. |
-| `username`      | `string` | `obltmachine`      | The oblt-cli username                                                                                               |
-| `slack-channel` | `string` | `#observablt-bots` | The slack channel for oblt-cli notifications                                                                        |
+| Name                         | Type     | Default            | Description                                                                                                         |
+|------------------------------|----------|--------------------|---------------------------------------------------------------------------------------------------------------------|
+| `version`                    | `string` | `7.3.0`            | The version of the oblt-cli to install.                                                                             |
+| <nobr>`version-file`</nobr>  | `string` | -                  | The file to get the version from. If both `version` and `version-file` are provided, the plugin will use `version`. |
+| `username`                   | `string` | `obltmachine`      | The oblt-cli username                                                                                               |
+| <nobr>`slack-channel`</nobr> | `string` | `#observablt-bots` | The slack channel for oblt-cli notifications                                                                        |
 
 ## Usage
 
