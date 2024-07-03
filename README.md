@@ -33,10 +33,7 @@ The token can be set in the following environment variables:
 
 - `GH_TOKEN`
 - `GITHUB_TOKEN`
-- `VAULT_GITHUB_TOKEN`
-
-> [!NOTE]
-> The `VAULT_GITHUB_TOKEN` is set by default.
+- `VAULT_GITHUB_TOKEN` (This is set by the default in Buildkite agents)
 
 If multiple are set, the plugin will use the first one it finds in the order they are listed.
 
