@@ -10,7 +10,7 @@ steps:
   - label: "E2E - Create cluster"
     key: create-cluster
     agents:
-      provider: gcp
+      imageUID: "1"
     plugins:
       - elastic/oblt-cli#${BUILDKITE_COMMIT}:
           version: 7.3.0
