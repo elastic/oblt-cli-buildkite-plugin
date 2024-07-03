@@ -7,20 +7,16 @@ DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck disable=SC1091
 . "${DIR}/../lib/setup.bash"
 
+# shellcheck disable=SC1091
+. "${DIR}/../lib/setup-git.bash"
+
 GH_TOKEN="${GH_TOKEN:-${GITHUB_TOKEN:-}}"
 OBLT_CLI_USERNAME="${BUILDKITE_PLUGIN_OBLT_CLI_USERNAME:-obltmachine}"
 OBLT_CLI_SLACK_CHANNEL="${BUILDKITE_PLUGIN_OBLT_CLI_SLACK_CHANNEL:-#observablt-bots}"
 OBLT_CLI_VERSION="${BUILDKITE_PLUGIN_OBLT_CLI_VERSION:-}"
 OBLT_CLI_VERSION_FILE="${BUILDKITE_PLUGIN_OBLT_CLI_VERSION_FILE:-"${DIR}/../.default-oblt-cli-version"}"
 
-git config --global user.name "$OBLT_CLI_USERNAME"
-git config --global user.email "${OBLT_CLI_USERNAME}@users.noreply.github.com"
-
-git config --global credential.helper store
-echo "protocol=https
-host=github.com
-username=token
-password=$GH_TOKEN" | git credential-store store
+setup_git "${OBLT_CLI_USERNAME}"
 
 VERSION=$(get_version_from_input_or_file "${OBLT_CLI_VERSION}" "${OBLT_CLI_VERSION_FILE}")
 echo "~~~ :elastic-apm: Set up oblt-cli ${VERSION}"

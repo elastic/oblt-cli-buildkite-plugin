@@ -2,10 +2,6 @@
 
 set -euo pipefail
 
-echo "~~~ Set up git"
-git config --global user.name "obltmachine"
-git config --global user.email "obltmachine@users.noreply.github.com"
-
 echo "--- Create cluster"
 oblt-cli cluster create custom \
 	--dry-run \

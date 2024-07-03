@@ -4,10 +4,20 @@ load "$BATS_PLUGIN_PATH/load.bash"
 
 export OBLT_CLI_BIN="${HOME}/.oblt-cli/bin"
 
+stub_git() {
+	stub git \
+		"config --global user.name \* : echo 'git: Set user.name'" \
+		"config --global user.email \* : echo 'git: Set user.email'" \
+		"config --global credential.helper store : echo 'git: set credential-helper store'" \
+		"credential-store store : echo 'git: store credentials'"
+}
+
 @test "pre-command version from file" {
 	# arrange
 	local tmp_dir
 	local gh_token=${GH_TOKEN:-${GITHUB_TOKEN}}
+
+	stub_git
 
 	if [[ -z ${gh_token} ]]; then
 		tmp_dir=$(temp_make)
@@ -38,6 +48,7 @@ export OBLT_CLI_BIN="${HOME}/.oblt-cli/bin"
 		unstub curl
 		temp_del "$tmp_dir"
 	fi
+	unstub git
 }
 
 @test "pre-command version from input" {
@@ -57,6 +68,8 @@ export OBLT_CLI_BIN="${HOME}/.oblt-cli/bin"
 	else
 		version="7.2.5"
 	fi
+
+	stub_git
 
 	# act
 	run env BUILDKITE_PLUGIN_OBLT_CLI_VERSION="${version}" \
@@ -78,6 +91,7 @@ export OBLT_CLI_BIN="${HOME}/.oblt-cli/bin"
 		unstub curl
 		temp_del "$tmp_dir"
 	fi
+	unstub git
 }
 
 @test "pre-command default version" {
@@ -86,6 +100,7 @@ export OBLT_CLI_BIN="${HOME}/.oblt-cli/bin"
 		skip
 	fi
 	# arrange
+	stub_git
 
 	# act
 	run "$PWD/hooks/pre-command"
@@ -95,6 +110,9 @@ export OBLT_CLI_BIN="${HOME}/.oblt-cli/bin"
 	assert_success
 	assert_output --partial "~~~ :elastic-apm: Set up oblt-cli ${version}"
 	assert_output --partial "Writing configuration file /home/plugin-tester/.oblt-cli/config.yaml"
+
+	# cleanup
+	unstub git
 }
 
 @test "pre-command non-existent version file should fail" {
@@ -102,8 +120,8 @@ export OBLT_CLI_BIN="${HOME}/.oblt-cli/bin"
 	if [[ -z ${gh_token} ]]; then
 		skip
 	fi
-
 	# arrange
+	stub_git
 
 	# act
 	run env BUILDKITE_PLUGIN_OBLT_CLI_VERSION_FILE="${PWD}/non-existent" "$PWD/hooks/pre-command"
@@ -111,4 +129,7 @@ export OBLT_CLI_BIN="${HOME}/.oblt-cli/bin"
 	# assert
 	assert_failure
 	assert_output "version-file not found: /plugin/non-existent"
+
+	# cleanup
+	unstub git
 }
