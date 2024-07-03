@@ -46,7 +46,7 @@ function get_arch() {
 
 # Get the asset name
 # Arguments:
-#   $1: The version
+#   $1: The oblt-cli version
 #   $2: The system name - (optional)
 #   $3: The machine name - (optional)
 # Returns:
@@ -64,7 +64,7 @@ function get_asset_name() {
 
 # Get the asset ID
 # Arguments:
-#   $1: The version
+#   $1: The oblt-cli version
 #   $2: The GitHub token
 # Returns:
 #  The asset ID
@@ -84,7 +84,7 @@ function get_asset_id() {
 # Download the asset
 # Arguments:
 #   $1: The asset ID
-#   $2: The target directory
+#   $2: The target directory to extract the asset
 #   $3: The GitHub token
 # Returns:
 #  None

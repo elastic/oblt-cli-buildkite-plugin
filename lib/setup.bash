@@ -12,10 +12,11 @@ CURR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Downloads oblt-cli and configures it
 # Arguments:
-#   $1: version
-#   $2: username
-#   $3: slack_channel
-#   $4: bin_dir
+#   $1: The oblt-cli version
+#   $2: The oblt-cli username
+#   $3: The slack channel for notifications
+#   $4: The directory to install the binary
+#   $5: The GitHub token
 # Returns:
 #   None
 function setup() {
