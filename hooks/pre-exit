@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# Clear credential-store previously configured in the pre-command
+git config --global credential.helper store
+echo "protocol=https
+host=github.com
+username=
+password=" | git credential-store store
