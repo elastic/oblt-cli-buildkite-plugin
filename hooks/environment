@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+OBLT_CLI_BIN="${HOME}/.oblt-cli/bin"
+ELASTIC_APM_ENVIRONMENT="ci"
+PATH="${OBLT_CLI_BIN}:${PATH}"
+
+export OBLT_CLI_BIN ELASTIC_APM_ENVIRONMENT PATH

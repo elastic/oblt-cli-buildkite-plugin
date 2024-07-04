@@ -3,6 +3,8 @@
 load "$BATS_PLUGIN_PATH/load.bash"
 load "$PWD/lib/asset"
 
+export VAULT_GITHUB_TOKEN="mock-token"
+
 @test "Get asset name should return asset name" {
 	# arrange
 	local version="7.3.0"

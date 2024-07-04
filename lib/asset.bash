@@ -46,7 +46,7 @@ function get_arch() {
 
 # Get the asset name
 # Arguments:
-#   $1: The version
+#   $1: The oblt-cli version
 #   $2: The system name - (optional)
 #   $3: The machine name - (optional)
 # Returns:
@@ -63,36 +63,38 @@ function get_asset_name() {
 }
 
 # Get the asset ID
+# Globals:
+#   VAULT_GITHUB_TOKEN
 # Arguments:
-#   $1: The version
+#   $1: The oblt-cli version
 # Returns:
 #  The asset ID
 function get_asset_id() {
-	local -r gh_token=${GH_TOKEN:-}
 	local -r version=$1
 	local -r asset_name=$(get_asset_name "$version")
 	local release
 	release=$(curl -sL \
 		-H "Accept: application/vnd.github+json" \
-		-H "Authorization: Bearer ${gh_token}" \
+		-H "Authorization: Bearer ${VAULT_GITHUB_TOKEN}" \
 		-H "X-GitHub-Api-Version: 2022-11-28" \
 		"https://api.github.com/repos/elastic/observability-test-environments/releases/tags/${version}")
 	echo "$release" | jq -r --arg name "$asset_name" '.assets | .[] | select(.name == $name) | .id'
 }
 
 # Download the asset
+# Globals:
+#   VAULT_GITHUB_TOKEN
 # Arguments:
 #   $1: The asset ID
-#   $2: The target directory
+#   $2: The target directory to extract the asset
 # Returns:
 #  None
 function download_asset() {
-	local -r gh_token=${GH_TOKEN:-}
 	local -r asset_id=$1
 	local -r target_dir=$2
 	curl -sL \
 		-H "Accept: application/octet-stream" \
-		-H "Authorization: Bearer ${gh_token}" \
+		-H "Authorization: Bearer ${VAULT_GITHUB_TOKEN}" \
 		-H "X-GitHub-Api-Version: 2022-11-28" \
 		"https://api.github.com/repos/elastic/observability-test-environments/releases/assets/${asset_id}" | tar -xz -C "$target_dir"
 }

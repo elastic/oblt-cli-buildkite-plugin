@@ -5,7 +5,7 @@ set -euo pipefail
 # Get the version from the file
 # Also supports .tool-versions file (asdf-vm)
 # Arguments:
-#   $1: filename
+#   $1: The file where the version is stored
 # Returns:
 #   version
 function get_version_from_file() {
@@ -28,8 +28,8 @@ function get_version_from_file() {
 # If the input is not empty, it will return the input
 # Otherwise, it will return the version from the file
 # Arguments:
-#   $1: input_version
-#   $2: version_file
+#   $1: The version provided as plugin property
+#   $2: The file where the version is stored
 # Returns:
 #   version
 function get_version_from_input_or_file() {

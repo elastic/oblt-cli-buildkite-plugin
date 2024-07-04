@@ -12,10 +12,10 @@ CURR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Downloads oblt-cli and configures it
 # Arguments:
-#   $1: version
-#   $2: username
-#   $3: slack_channel
-#   $4: bin_dir
+#   $1: The oblt-cli version
+#   $2: The oblt-cli username
+#   $3: The slack channel for notifications
+#   $4: The directory to install the binary
 # Returns:
 #   None
 function setup() {
@@ -26,15 +26,7 @@ function setup() {
 	local -r asset_id=$(get_asset_id "$version")
 	mkdir -p "${bin_dir}"
 	download_asset "$asset_id" "$bin_dir"
-
-	export PATH="${bin_dir}:${PATH}"
-	export GITHUB_TOKEN="${GH_TOKEN}"
-	export ELASTIC_APM_ENVIRONMENT="ci"
-
-	git config --global user.name "${GIT_USER:-"${username}"}"
-	git config --global user.email "${GIT_EMAIL:-"${username}@users.noreply.github.com"}"
-
-	oblt-cli configure \
+	"${bin_dir}"/oblt-cli configure \
 		--git-http-mode \
 		--username="${username}" \
 		--slack-channel="${slack_channel}"
