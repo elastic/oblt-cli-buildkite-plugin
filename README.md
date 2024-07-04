@@ -29,18 +29,7 @@ steps:
 ```
 
 ## GitHub Token
-This plugin requires a GitHub token to work properly.
-The token can be set in the following environment variables:
-
-- `GH_TOKEN`
-- `GITHUB_TOKEN`
-- `VAULT_GITHUB_TOKEN` (This is set by the default in Buildkite agents)
-
-If multiple are set, the plugin will use the first one it finds in the order they are listed.
-
-> [!WARNING]
-> This plugin modifies the git credentials. If you provide a token other than the default, make sure it has the necessary permissions
-> to perform the actions required by the command where this plugin is used.
+This plugin requires the `VAULT_GITHUB_TOKEN`, which is set by default in Buildkite agents.
 
 ### Permissions
 The plugin requires the following GitHub token permissions in the [elastic/observability-test-environments](https://github.com/elastic/observability-test-environments) repository:

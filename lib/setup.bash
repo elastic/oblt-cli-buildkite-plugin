@@ -16,7 +16,6 @@ CURR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 #   $2: The oblt-cli username
 #   $3: The slack channel for notifications
 #   $4: The directory to install the binary
-#   $5: The GitHub token
 # Returns:
 #   None
 function setup() {
@@ -24,10 +23,9 @@ function setup() {
 	local -r username=$2
 	local -r slack_channel=$3
 	local -r bin_dir=$4
-	local -r gh_token=$5
-	local -r asset_id=$(get_asset_id "$version" "$gh_token")
+	local -r asset_id=$(get_asset_id "$version")
 	mkdir -p "${bin_dir}"
-	download_asset "$asset_id" "$bin_dir" "$gh_token"
+	download_asset "$asset_id" "$bin_dir"
 	"${bin_dir}"/oblt-cli configure \
 		--git-http-mode \
 		--username="${username}" \

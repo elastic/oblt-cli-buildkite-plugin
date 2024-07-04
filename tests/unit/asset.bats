@@ -3,6 +3,8 @@
 load "$BATS_PLUGIN_PATH/load.bash"
 load "$PWD/lib/asset"
 
+export VAULT_GITHUB_TOKEN="mock-token"
+
 @test "Get asset name should return asset name" {
 	# arrange
 	local version="7.3.0"
@@ -42,7 +44,7 @@ load "$PWD/lib/asset"
 	stub curl "cat $PWD/tests/fixtures/release.json"
 
 	# act
-	run get_asset_id "7.3.0" "fake-token"
+	run get_asset_id "7.3.0"
 
 	# assert
 	assert_success
@@ -59,7 +61,7 @@ load "$PWD/lib/asset"
 	stub curl "cat $tmp_dir/oblt-cli.tar.gz"
 
 	# act
-	run download_asset "176068054" "$tmp_dir" "fake-token"
+	run download_asset "176068054" "$tmp_dir"
 
 	# assert
 	assert_success

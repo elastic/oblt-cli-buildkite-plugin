@@ -4,14 +4,13 @@ set -euo pipefail
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-OBLT_CLI_GH_TOKEN="${GH_TOKEN:-${GITHUB_TOKEN:-${VAULT_GITHUB_TOKEN:-}}}"
 OBLT_CLI_USERNAME="${BUILDKITE_PLUGIN_OBLT_CLI_USERNAME:-obltmachine}"
 OBLT_CLI_SLACK_CHANNEL="${BUILDKITE_PLUGIN_OBLT_CLI_SLACK_CHANNEL:-#observablt-bots}"
 OBLT_CLI_VERSION="${BUILDKITE_PLUGIN_OBLT_CLI_VERSION:-}"
 OBLT_CLI_VERSION_FILE="${BUILDKITE_PLUGIN_OBLT_CLI_VERSION_FILE:-"${DIR}/../.default-oblt-cli-version"}"
 
-if [[ -z ${OBLT_CLI_GH_TOKEN} ]]; then
-	>&2 echo "The GH_TOKEN, GITHUB_TOKEN or VAULT_GITHUB_TOKEN environment variable must be set."
+if [[ -z ${VAULT_GITHUB_TOKEN} ]]; then
+	>&2 echo "The VAULT_GITHUB_TOKEN environment variable must be set."
 	exit 1
 fi
 
@@ -21,12 +20,6 @@ fi
 git config --global user.name "${GIT_USER:-"${OBLT_CLI_USERNAME}"}"
 git config --global user.email "${GIT_EMAIL:-"${OBLT_CLI_USERNAME}@users.noreply.github.com"}"
 
-git config --global credential.helper store
-echo "protocol=https
-host=github.com
-username=token
-password=$OBLT_CLI_GH_TOKEN" | git credential-store store
-
 VERSION=$(get_version_from_input_or_file "${OBLT_CLI_VERSION}" "${OBLT_CLI_VERSION_FILE}")
 echo "~~~ :elastic-apm: Set up oblt-cli ${VERSION}"
-setup "${VERSION}" "${OBLT_CLI_USERNAME}" "${OBLT_CLI_SLACK_CHANNEL}" "${OBLT_CLI_BIN}" "${OBLT_CLI_GH_TOKEN}"
+setup "${VERSION}" "${OBLT_CLI_USERNAME}" "${OBLT_CLI_SLACK_CHANNEL}" "${OBLT_CLI_BIN}"
