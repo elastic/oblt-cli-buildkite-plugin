@@ -25,8 +25,21 @@ function setup() {
 	local -r bin_dir=$4
 	local -r asset_id=$(get_asset_id "$version")
 	mkdir -p "${bin_dir}"
-	download_asset "$asset_id" "$bin_dir"
-	"${bin_dir}"/oblt-cli configure \
+	temp_dir=$(mktemp -d)
+	download_asset "$asset_id" "$temp_dir"
+	cat <<-EOF >"${bin_dir}/oblt-cli"
+		#!/usr/bin/env bash
+
+		set -euo pipefail
+
+		if [[ $1 == "cluster" && $2 == "create" ]]; then
+		    "${temp_dir}/oblt-cli" --output-config="$OBLT_CLI_OUTPUT_FILE" "\$@"
+		  else
+		    "${temp_dir}/oblt-cli" "\$@"
+		  fi
+	EOF
+	chmod +x "${bin_dir}/oblt-cli"
+	oblt-cli configure \
 		--git-http-mode \
 		--username="${username}" \
 		--slack-channel="${slack_channel}"
