@@ -29,7 +29,7 @@ function setup() {
 	download_asset "$asset_id" "$temp_dir"
 	cat <<EOF >"${bin_dir}/oblt-cli"
 #!/usr/bin/env bash
-OBLT_CLI_BINARY="${temp_dir}/oblt-cli" "${CURR_DIR}/oblt-cli-wrapper" "\$@"
+OBLT_CLI_BINARY="${temp_dir}/oblt-cli" "${CURR_DIR}/../bin/oblt-cli-wrapper" "\$@"
 EOF
 	chmod +x "${bin_dir}/oblt-cli"
 	oblt-cli configure \
