@@ -27,17 +27,40 @@ function setup() {
 	mkdir -p "${bin_dir}"
 	temp_dir=$(mktemp -d)
 	download_asset "$asset_id" "$temp_dir"
-	cat <<-EOF >"${bin_dir}/oblt-cli"
-		#!/usr/bin/env bash
+	cat <<EOF >"${bin_dir}/oblt-cli"
+  #!/usr/bin/env bash
 
-		set -euo pipefail
+  if [[ \$1 == "cluster" && \$2 == "create" ]]; then
+      POSITIONAL_ARGS=()
+      while [[ $# -gt 0 ]]; do
+        case \$1 in
+          --output-file)
+            OUTPUT_FILE="\$2"
+            shift
+            shift
+            ;;
+          --output-file=*)
+            OUTPUT_FILE="\${1#*=}"
+            shift
+            ;;
+          *)
+            POSITIONAL_ARGS+=("\$1")
+            shift # past argument
+            ;;
+        esac
+      done
 
-		if [[ $1 == "cluster" && $2 == "create" ]]; then
-		    "${temp_dir}/oblt-cli" --output-config="$OBLT_CLI_OUTPUT_FILE" "\$@"
-		  else
-		    "${temp_dir}/oblt-cli" "\$@"
-		  fi
-	EOF
+      set -- "\${POSITIONAL_ARGS[@]}"
+      echo "\$OUTPUT_FILE"
+      echo "\${POSITIONAL_ARGS[@]}"
+
+      "${temp_dir}/oblt-cli" "\${POSITIONAL_ARGS[@]}" --output-file="\$OUTPUT_FILE"
+
+      cp "\$OUTPUT_FILE" "\$OBLT_CLI_OUTPUT_FILE"
+  else
+      "${temp_dir}/oblt-cli" "\$@"
+  fi
+EOF
 	chmod +x "${bin_dir}/oblt-cli"
 	oblt-cli configure \
 		--git-http-mode \
