@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# This script is a wrapper around the oblt-cli binary to intercept the --output-file flag
+# so it can be used in pre-exit hook to delete the cluster.
+
 set -euo pipefail
 
 if [[ $1 == "cluster" && $2 == "create" ]]; then
