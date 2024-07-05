@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if [ ! -f "$OBLT_CLI_OUTPUT_FILE" ]; then
+  exit 0
+fi
+
+# Check if the cluster exists before destroying it
+# Arguments:
+#   $1: cluster name
+# Returns:
+function cluster_exists() {
+    >&2 echo "[INFO] Checking if cluster exists: $1"
+    oblt-cli cluster secrets cluster-state --cluster-name "$1" > /dev/null 2>&1
+}
+
+cluster_name="$(jq -r .ClusterName "$OBLT_CLI_OUTPUT_FILE")"
+readonly MAX_ATTEMPTS=10
+attempt=0
+until cluster_exists "${cluster_name}"; do
+  attempt=$((attempt+1))
+  if [[ "${attempt}" -gt "${MAX_ATTEMPTS}" ]]; then
+    >&2 echo "[WARNING] Failed to get cluster secrets after ${MAX_ATTEMPTS} attempts. Exiting."
+    exit 0
+  fi
+  sleep 60
+  >&2 echo "[INFO] Retrying to check if cluster exists. Attempt ${attempt}/${MAX_ATTEMPTS}"
+done
+
+oblt-cli cluster destroy \
+  --force \
+  --disable-banner \
+  --cluster-name="${cluster_name}" || true
