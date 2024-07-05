@@ -2,7 +2,9 @@
 
 load "$BATS_PLUGIN_PATH/load.bash"
 
-export OBLT_CLI_BIN="${HOME}/.oblt-cli/bin"
+# shellcheck source=/dev/null
+. "$PWD/hooks/environment"
+
 export VAULT_GITHUB_TOKEN=${GH_TOKEN:-${GITHUB_TOKEN:-$VAULT_GITHUB_TOKEN}}
 
 stub_git() {

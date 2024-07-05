@@ -2,7 +2,10 @@
 
 set -euo pipefail
 
-if [ ! -f "$OBLT_CLI_OUTPUT_FILE" ]; then
+if [[
+  "${BUILDKITE_PLUGIN_OBLT_CLI_AUTO_DESTROY:-false}" == "false"
+  || ! -f "$OBLT_CLI_OUTPUT_FILE"
+]]; then
   exit 0
 fi
 

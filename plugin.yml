@@ -23,4 +23,7 @@ configuration:
     slack-channel:
       type: string
       description: The Slack channel to post notifications to
+    auto-destroy:
+      type: boolean
+      description: Automatically destroy the cluster in the pre-exit hook
   additionalProperties: false
