@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if [[ $1 == "cluster" && $2 == "create" ]]; then
+	POSITIONAL_ARGS=()
+	while [[ $# -gt 0 ]]; do
+		case $1 in
+		--output-file)
+			OUTPUT_FILE="$2"
+			shift
+			shift
+			;;
+		--output-file=*)
+			OUTPUT_FILE="${1#*=}"
+			shift
+			;;
+		*)
+			POSITIONAL_ARGS+=("$1")
+			shift # past argument
+			;;
+		esac
+	done
+	set -- "${POSITIONAL_ARGS[@]}"
+	if [[ -n ${OUTPUT_FILE:-} ]]; then
+		"${OBLT_CLI_BINARY}" "${POSITIONAL_ARGS[@]}" --output-file="$OUTPUT_FILE"
+		cp "$OUTPUT_FILE" "$OBLT_CLI_OUTPUT_FILE"
+	else
+		"${OBLT_CLI_BINARY}" "${POSITIONAL_ARGS[@]}" --output-file="$OBLT_CLI_OUTPUT_FILE"
+	fi
+else
+	"${OBLT_CLI_BINARY}" "$@"
+fi
