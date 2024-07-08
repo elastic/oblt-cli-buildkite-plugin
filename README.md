@@ -23,7 +23,7 @@ steps:
     agents:
       provider: gcp # currently only works on the gcp provider
     plugins:
-      - elastic/oblt-cli#v1.0.0:
+      - elastic/oblt-cli#v0.1.0:
           version-file: .tool-versions
 
 ```
