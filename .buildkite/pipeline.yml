@@ -10,7 +10,7 @@ steps:
       provider: gcp
     plugins:
       - elastic/oblt-cli#${BUILDKITE_COMMIT}:
-          version-file: .oblt-cli-version
+          version-file: .default-oblt-cli-version
     command: .buildkite/scripts/create-cluster.sh
 
   - label: "E2E - Get cluster name"
