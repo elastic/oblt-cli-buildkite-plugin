@@ -22,4 +22,5 @@ services:
       - GH_TOKEN
       - GITHUB_TOKEN
       - VAULT_GITHUB_TOKEN
+      - CI
     command: [ 'bats', 'tests/integration' ]
