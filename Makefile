@@ -7,7 +7,7 @@ test:
 
 .PHONY: integration-test
 integration-test:
-	@docker compose run --rm integration-test
+	@env CI=true docker compose run --rm integration-test
 
 .PHONY: plugin-lint
 plugin-lint:
