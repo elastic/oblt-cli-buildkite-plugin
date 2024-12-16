@@ -77,7 +77,7 @@ function get_asset_id() {
 		-H "Accept: application/vnd.github+json" \
 		-H "Authorization: Bearer ${VAULT_GITHUB_TOKEN}" \
 		-H "X-GitHub-Api-Version: 2022-11-28" \
-		"https://api.github.com/repos/elastic/observability-test-environments/releases/tags/${version}")
+		"https://api.github.com/repos/elastic/oblt-cli/releases/tags/${version}")
 	echo "$release" | jq -r --arg name "$asset_name" '.assets | .[] | select(.name == $name) | .id'
 }
 
@@ -96,5 +96,5 @@ function download_asset() {
 		-H "Accept: application/octet-stream" \
 		-H "Authorization: Bearer ${VAULT_GITHUB_TOKEN}" \
 		-H "X-GitHub-Api-Version: 2022-11-28" \
-		"https://api.github.com/repos/elastic/observability-test-environments/releases/assets/${asset_id}" | tar -xz -C "$target_dir"
+		"https://api.github.com/repos/elastic/oblt-cli/releases/assets/${asset_id}" | tar -xz -C "$target_dir"
 }
