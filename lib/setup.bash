@@ -35,7 +35,7 @@ function setup_obltcli() {
 		--slack-channel="${slack_channel}"
 }
 
-# Cconfigures git
+# Configures git
 # Arguments:
 #   $1: The oblt-cli username
 # Returns:
