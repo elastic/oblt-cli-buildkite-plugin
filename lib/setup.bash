@@ -18,7 +18,7 @@ CURR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 #   $4: The directory to install the binary
 # Returns:
 #   None
-function setup() {
+function setup_obltcli() {
 	local -r version=$1
 	local -r username=$2
 	local -r slack_channel=$3
@@ -26,11 +26,23 @@ function setup() {
 	echo "~~~ searching oblt-cli ${version}"
 	local -r asset_id=$(get_asset_id "$version")
 	mkdir -p "${bin_dir}"
-	echo "~~~ download oblt-cli  asset ${asset_id}"
+	echo "~~~ download oblt-cli asset ${asset_id}"
 	download_asset "$asset_id" "$bin_dir"
 	echo "~~~ :elastic-apm: configure oblt-cli"
 	"${bin_dir}"/oblt-cli configure \
 		--git-http-mode \
 		--username="${username}" \
 		--slack-channel="${slack_channel}"
+}
+
+# Cconfigures git
+# Arguments:
+#   $1: The oblt-cli username
+# Returns:
+#   None
+function setup_git() {
+	local -r OBLT_CLI_USERNAME=$1
+	echo "~~~ :elastic-apm: configure git"
+	git config --global user.name "${GIT_USER:-"${OBLT_CLI_USERNAME}"}"
+	git config --global user.email "${GIT_EMAIL:-"${OBLT_CLI_USERNAME}@users.noreply.github.com"}"
 }
