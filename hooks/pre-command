@@ -20,4 +20,4 @@ fi
 setup_git "${OBLT_CLI_USERNAME}"
 
 VERSION=$(get_version_from_input_or_file "${OBLT_CLI_VERSION}" "${OBLT_CLI_VERSION_FILE}")
-setup "${VERSION}" "${OBLT_CLI_USERNAME}" "${OBLT_CLI_SLACK_CHANNEL}" "${OBLT_CLI_BIN}"
+setup_obltcli "${VERSION}" "${OBLT_CLI_USERNAME}" "${OBLT_CLI_SLACK_CHANNEL}" "${OBLT_CLI_BIN}"
