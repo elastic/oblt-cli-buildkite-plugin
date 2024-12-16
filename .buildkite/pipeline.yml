@@ -1,13 +1,9 @@
 steps:
   - label: integration-test with GITHUB_TOKEN
-    agents:
-      provider: gcp
     command: make integration-test
 
   - label: "E2E - Create cluster"
     key: create-cluster
-    agents:
-      provider: gcp
     plugins:
       - elastic/oblt-cli#${BUILDKITE_COMMIT}:
           version-file: .default-oblt-cli-version
