@@ -18,26 +18,26 @@ CURR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 #   0 if version_a is greater than or equal to version_b.
 #   1 if version_a is less than version_b.
 function is_version_greater_or_equal() {
-    local version_a=$1
-    local version_b=$2
+	local version_a=$1
+	local version_b=$2
 
-    # Split versions into components
-    IFS='.' read -r -a version_a_parts <<< "$version_a"
-    IFS='.' read -r -a version_b_parts <<< "$version_b"
+	# Split versions into components
+	IFS='.' read -r -a version_a_parts <<< "$version_a"
+	IFS='.' read -r -a version_b_parts <<< "$version_b"
 
-    # Compare each part numerically
-    for i in {0..2}; do
-        local part_a=${version_a_parts[i]:-0}
-        local part_b=${version_b_parts[i]:-0}
+	# Compare each part numerically
+	for i in {0..2}; do
+		local part_a=${version_a_parts[i]:-0}
+		local part_b=${version_b_parts[i]:-0}
 
-        if (( part_a > part_b )); then
-            return 0 # version_a is greater
-        elif (( part_a < part_b )); then
-            return 1 # version_a is not greater or equal
-        fi
-    done
+		if (( part_a > part_b )); then
+			return 0 # version_a is greater
+		elif (( part_a < part_b )); then
+			return 1 # version_a is not greater or equal
+		fi
+	done
 
-    return 0
+	return 0
 }
 
 # Downloads oblt-cli and configures it
