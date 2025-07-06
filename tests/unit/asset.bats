@@ -17,6 +17,19 @@ export VAULT_GITHUB_TOKEN="mock-token"
 	assert_output "oblt-cli_${version}_linux_amd64.tar.gz"
 }
 
+@test "Get asset name should return asset name for Windows" {
+	# arrange
+	OSTYPE="cygwin"
+
+	# act
+	run get_asset_name 7.3.0 "windows" "amd64"
+
+	# assert
+	assert_success
+	assert_output "oblt-cli_${version}_windows_amd64.tar.gz"
+}
+
+
 @test "Get asset name should fail with unsupported OS" {
 	# arrange
 

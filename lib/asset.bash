@@ -8,19 +8,23 @@ set -euo pipefail
 # Returns:
 #  The OS name compatible with the asset name
 function get_os() {
-	local -r system=${1:-$(uname -s)}
-	case "${system}" in
-	Darwin*)
-		echo 'darwin'
-		;;
-	Linux*)
-		echo 'linux'
-		;;
-	*)
-		>&2 echo "Unsupported OS. Exiting."
-		return 1
-		;;
-	esac
+	if [[ "$OSTYPE" =~ ^(win|msys|cygwin) ]] ; then
+		echo 'windows'
+	else
+		local -r system=${1:-$(uname -s)}
+		case "${system}" in
+		Darwin*)
+			echo 'darwin'
+			;;
+		Linux*)
+			echo 'linux'
+			;;
+		*)
+			>&2 echo "Unsupported OS. Exiting."
+			return 1
+			;;
+		esac
+	fi
 }
 
 # Get the architecture name
@@ -29,19 +33,26 @@ function get_os() {
 # Returns:
 #  The architecture name compatible with the asset name
 function get_arch() {
-	local -r machine=${1:-$(uname -m)}
-	case "${machine}" in
-	x86_64)
+	if [[ "$OSTYPE" =~ ^(win|msys|cygwin) ]] ; then
+		# For Windows, we assume amd64 architecture
+		# as it is the most common architecture for Windows systems.
+		# TODO: Add support for arm64 in Windows if needed.
 		echo 'amd64'
-		;;
-	arm64)
-		echo 'arm64'
-		;;
-	*)
-		>&2 echo "Unsupported architecture. Exiting."
-		return 1
-		;;
-	esac
+	else
+		local -r machine=${1:-$(uname -m)}
+		case "${machine}" in
+		x86_64)
+			echo 'amd64'
+			;;
+		arm64)
+			echo 'arm64'
+			;;
+		*)
+			>&2 echo "Unsupported architecture. Exiting."
+			return 1
+			;;
+		esac
+	fi
 }
 
 # Get the asset name
