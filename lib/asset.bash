@@ -37,6 +37,9 @@ function get_arch() {
 	arm64)
 		echo 'arm64'
 		;;
+	aarch64)
+		echo 'arm64'
+		;;
 	*)
 		>&2 echo "Unsupported architecture. Exiting."
 		return 1
