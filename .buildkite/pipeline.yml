@@ -4,7 +4,7 @@ steps:
       provider: gcp
     command: make integration-test
 
-  - label: "E2E - Create cluster (Linux)"
+  - label: "E2E - Create cluster (Linux AMD64)"
     key: create-cluster
     agents:
       provider: gcp
@@ -13,14 +13,15 @@ steps:
           version-file: .default-oblt-cli-version
     command: .buildkite/scripts/create-cluster.sh
 
-  - label: "E2E - Get cluster name (Linux)"
+  - label: "E2E - Get cluster name (Linux AMD64)"
     depends_on: create-cluster
     command: buildkite-agent meta-data get cluster-name
 
   - label: "E2E - Create cluster (Linux ARM64)"
     agents:
       provider: "aws"
-      imagePrefix: "core-ubuntu-2204-aarch64"
+      machineType: "t2a-standard-8"
+      image: family/core-ubuntu-2204-aarch64
     plugins:
       - elastic/oblt-cli#${BUILDKITE_COMMIT}:
           version-file: .default-oblt-cli-version
