@@ -17,20 +17,6 @@ steps:
     depends_on: create-cluster
     command: buildkite-agent meta-data get cluster-name
 
-  - label: "E2E - Create cluster (Windows)"
-    key: create-cluster-windows
-    agents:
-      provider: gcp
-      image: "family/core-windows-2022"
-    plugins:
-      - elastic/oblt-cli#${BUILDKITE_COMMIT}:
-          version-file: .default-oblt-cli-version
-    command: .buildkite/scripts/create-cluster.ps1
-
-  - label: "E2E - Get cluster name (Windows)"
-    depends_on: create-cluster-windows
-    command: buildkite-agent meta-data get cluster-name-windows
-
   - label: "E2E - Create cluster (Linux ARM64)"
     agents:
       provider: "aws"
