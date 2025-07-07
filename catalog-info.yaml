@@ -28,3 +28,5 @@ spec:
         observablt-robots: {}
         everyone:
           access_level: READ_ONLY
+      provider_settings:
+        build_pull_request_forks: true
