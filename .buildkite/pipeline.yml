@@ -21,7 +21,7 @@ steps:
     agents:
       provider: "aws"
       machineType: "t2a-standard-8"
-      image: family/core-ubuntu-2204-aarch64
+      imagePrefix: "core-ubuntu-2204-aarch64"
     plugins:
       - elastic/oblt-cli#${BUILDKITE_COMMIT}:
           version-file: .default-oblt-cli-version
