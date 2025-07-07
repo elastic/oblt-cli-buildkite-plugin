@@ -20,7 +20,7 @@ steps:
   - label: "E2E - Create cluster (Linux ARM64)"
     agents:
       provider: "aws"
-      machineType: "t2a-standard-8"
+      instanceType: "t2a-standard-8"
       imagePrefix: "core-ubuntu-2204-aarch64"
     plugins:
       - elastic/oblt-cli#${BUILDKITE_COMMIT}:
