@@ -34,10 +34,7 @@ function get_arch() {
 	x86_64)
 		echo 'amd64'
 		;;
-	arm64)
-		echo 'arm64'
-		;;
-	aarch64)
+	arm64 | aarch64)
 		echo 'arm64'
 		;;
 	*)
