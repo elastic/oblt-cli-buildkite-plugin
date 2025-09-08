@@ -8,6 +8,10 @@ set -euo pipefail
 # Returns:
 #  The OS name compatible with the asset name
 function get_os() {
+	if [[ $OSTYPE =~ ^(win|msys|cygwin) ]]; then
+		echo 'windows'
+		return 0
+	fi
 	local -r system=${1:-$(uname -s)}
 	case "${system}" in
 	Darwin*)
@@ -29,6 +33,13 @@ function get_os() {
 # Returns:
 #  The architecture name compatible with the asset name
 function get_arch() {
+	if [[ $OSTYPE =~ ^(win|msys|cygwin) ]]; then
+		# For Windows, we assume amd64 architecture
+		# as it is the most common architecture for Windows systems.
+		# TODO: Add support for arm64 in Windows if needed.
+		echo 'amd64'
+		return 0
+	fi
 	local -r machine=${1:-$(uname -m)}
 	case "${machine}" in
 	x86_64)
