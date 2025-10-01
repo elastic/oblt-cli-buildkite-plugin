@@ -1,5 +1,7 @@
 # oblt-cli-buildkite-plugin
 
+[![usages](https://img.shields.io/badge/usages-white?logo=buildkite&logoColor=blue)](https://github.com/search?q=elastic%2Foblt-cli+%28path%3A.buildkite%29&type=code)
+
 A Buildkite plugin to set up oblt-cli.
 
 > [!NOTE]
