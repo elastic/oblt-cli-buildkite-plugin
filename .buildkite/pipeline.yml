@@ -27,6 +27,20 @@ steps:
           version-file: .default-oblt-cli-version
     command: .buildkite/scripts/create-cluster.sh
 
+  - label: "E2E - Create cluster (Windows)"
+    key: create-cluster-windows
+    agents:
+      provider: gcp
+      image: "family/platform-ingest-elastic-agent-windows-2022"
+    plugins:
+      - elastic/oblt-cli#${BUILDKITE_COMMIT}:
+          version-file: .default-oblt-cli-version
+    command: .buildkite/scripts/create-cluster.ps1
+
+  - label: "E2E - Get cluster name (Windows)"
+    depends_on: create-cluster-windows
+    command: buildkite-agent meta-data get cluster-name-windows
+
 notify:
   - slack: "#observablt-bots"
     if: build.branch == "main" && build.state == "failed"

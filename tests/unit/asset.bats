@@ -7,14 +7,27 @@ export VAULT_GITHUB_TOKEN="mock-token"
 
 @test "Get asset name should return asset name" {
 	# arrange
-	local version="7.3.0"
 
 	# act
-	run get_asset_name "${version}"
+	run get_asset_name "7.3.0"
 
 	# assert
 	assert_success
-	assert_output "oblt-cli_${version}_linux_amd64.tar.gz"
+	assert_output "oblt-cli_7.3.0_linux_amd64.tar.gz"
+}
+
+@test "Get asset name should return asset name for Windows" {
+	# arrange
+	export OSTYPE="cygwin"
+
+	# act
+	run get_asset_name "7.3.0" "windows" "amd64"
+
+	# assert
+	assert_success
+	assert_output "oblt-cli_7.3.0_windows_amd64.tar.gz"
+
+	unset OSTYPE
 }
 
 @test "Get asset name should fail with unsupported OS" {
