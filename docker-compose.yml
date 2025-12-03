@@ -3,13 +3,13 @@ services:
     image: buildkite/plugin-linter
     command: [ '--id', 'elastic/oblt-cli' ]
     volumes:
-      - ".:/plugin:ro"
+      - ".:/plugin:ro,z"
   test:
     build:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ".:/plugin:ro"
+      - ".:/plugin:ro,z"
     command: ['bats', 'tests/unit']
 
   integration-test:
@@ -17,7 +17,7 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ".:/plugin:ro"
+      - ".:/plugin:ro,z"
     environment:
       - GH_TOKEN
       - GITHUB_TOKEN
