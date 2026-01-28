@@ -1,5 +1,5 @@
 .PHONY: all
-all: test lint integration-test
+all: test plugin-lint integration-test
 
 .PHONY: test
 test:
