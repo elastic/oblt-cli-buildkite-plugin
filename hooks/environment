@@ -2,8 +2,15 @@
 
 set -euo pipefail
 
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 OBLT_CLI_BIN="${HOME}/.oblt-cli/bin"
 ELASTIC_APM_ENVIRONMENT="ci"
 PATH="${OBLT_CLI_BIN}:${PATH}"
+
+# shellcheck disable=SC1091
+. "${DIR}/../lib/log.bash"
+
+redact_secret "${VAULT_GITHUB_TOKEN:-}"
 
 export OBLT_CLI_BIN ELASTIC_APM_ENVIRONMENT PATH

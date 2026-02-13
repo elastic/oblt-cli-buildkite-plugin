@@ -5,6 +5,35 @@ load "$PWD/lib/asset"
 
 export VAULT_GITHUB_TOKEN="mock-token"
 
+create_curl_stub() {
+	local -r bin_dir=$1
+	cat >"${bin_dir}/curl" <<'EOF'
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+output=""
+while [[ $# -gt 0 ]]; do
+	case "$1" in
+		-o)
+			output=$2
+			shift 2
+			;;
+		*)
+			shift
+			;;
+	esac
+done
+
+if [[ -z ${output} ]]; then
+	cat "${CURL_STUB_FILE}"
+else
+	cat "${CURL_STUB_FILE}" >"${output}"
+fi
+EOF
+	chmod +x "${bin_dir}/curl"
+}
+
 @test "Get asset name should return asset name" {
 	# arrange
 	local version="7.3.0"
@@ -54,20 +83,41 @@ export VAULT_GITHUB_TOKEN="mock-token"
 	unstub curl
 }
 
+@test "Get asset id should fail when asset is missing" {
+	# arrange
+	stub curl "cat $PWD/tests/fixtures/release-no-asset.json"
+
+	# act
+	run get_asset_id "7.3.0"
+
+	# assert
+	assert_failure
+	assert_output "+++ :x: Asset not found for oblt-cli_7.3.0_linux_amd64.tar.gz."
+
+	# cleanup
+	unstub curl
+}
+
 @test "Download asset should download asset" {
 	# arrange
 	tmp_dir=$(temp_make)
+	bin_dir=$(temp_make)
 	tar -czf "$tmp_dir/oblt-cli.tar.gz" --directory "$PWD/tests/fixtures" oblt-cli
-	stub curl "cat $tmp_dir/oblt-cli.tar.gz"
+	create_curl_stub "${bin_dir}"
+	PATH="${bin_dir}:${PATH}"
+	export CURL_STUB_FILE="$tmp_dir/oblt-cli.tar.gz"
+	asset_name="oblt-cli_7.3.0_linux_amd64.tar.gz"
 
 	# act
-	run download_asset "176068054" "$tmp_dir"
+	run download_asset "176068054" "${asset_name}" "$tmp_dir" ""
 
 	# assert
 	assert_success
 	assert_file_exist "$tmp_dir/oblt-cli"
 
 	# cleanup
-	unstub curl
+	unset CURL_STUB_FILE
+	PATH="${PATH#${bin_dir}:}"
 	temp_del "$tmp_dir"
+	temp_del "$bin_dir"
 }

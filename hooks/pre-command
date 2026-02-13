@@ -9,17 +9,26 @@ OBLT_CLI_SLACK_CHANNEL="${BUILDKITE_PLUGIN_OBLT_CLI_SLACK_CHANNEL:-#observablt-b
 OBLT_CLI_VERSION="${BUILDKITE_PLUGIN_OBLT_CLI_VERSION:-}"
 OBLT_CLI_VERSION_FILE="${BUILDKITE_PLUGIN_OBLT_CLI_VERSION_FILE:-"${DIR}/../.default-oblt-cli-version"}"
 
-if [[ -z ${VAULT_GITHUB_TOKEN} ]]; then
-	>&2 echo "The VAULT_GITHUB_TOKEN environment variable must be set."
-	exit 1
-fi
+# shellcheck disable=SC1091
+. "${DIR}/../lib/log.bash"
+
+# shellcheck disable=SC1091
+. "${DIR}/../lib/validate.bash"
 
 # shellcheck disable=SC1091
 . "${DIR}/../lib/setup.bash"
+
+require_env "VAULT_GITHUB_TOKEN" "${VAULT_GITHUB_TOKEN:-}"
+redact_secret "${VAULT_GITHUB_TOKEN}"
+
+validate_username "${OBLT_CLI_USERNAME}"
+validate_slack_channel "${OBLT_CLI_SLACK_CHANNEL}"
+validate_safe_path "${OBLT_CLI_VERSION_FILE}" "${PWD}"
 
 git config --global user.name "${GIT_USER:-"${OBLT_CLI_USERNAME}"}"
 git config --global user.email "${GIT_EMAIL:-"${OBLT_CLI_USERNAME}@users.noreply.github.com"}"
 
 VERSION=$(get_version_from_input_or_file "${OBLT_CLI_VERSION}" "${OBLT_CLI_VERSION_FILE}")
+validate_version_format "${VERSION}"
 echo "~~~ :elastic-apm: Set up oblt-cli ${VERSION}"
 setup "${VERSION}" "${OBLT_CLI_USERNAME}" "${OBLT_CLI_SLACK_CHANNEL}" "${OBLT_CLI_BIN}"

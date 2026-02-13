@@ -24,3 +24,9 @@ services:
       - VAULT_GITHUB_TOKEN
       - CI
     command: [ 'bats', 'tests/integration' ]
+
+  shellcheck:
+    image: koalaman/shellcheck-alpine:stable
+    volumes:
+      - ".:/mnt:ro,z"
+    command: [ 'sh', '-c', 'shellcheck hooks/* lib/*.bash' ]
