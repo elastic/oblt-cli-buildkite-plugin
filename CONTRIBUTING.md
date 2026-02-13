@@ -19,4 +19,4 @@ To run the tests locally, use the following Makefile targets:
  - `integration-test`: will test the functionality itself requesting a token from GCP
  - `plugin-lint`: will check for linting issues
  - `shellcheck`: will check BASH scripts
-```
+

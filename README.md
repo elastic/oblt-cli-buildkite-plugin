@@ -33,8 +33,6 @@ steps:
 ## GitHub Token
 This plugin requires the `VAULT_GITHUB_TOKEN`, which is set by default in Buildkite agents.
 
-The token is added to the Buildkite redactor to avoid leaking it in logs.
-
 ### Permissions
 The plugin requires the following GitHub token permissions in the [elastic/observability-test-environments](https://github.com/elastic/observability-test-environments) repository:
 ```
@@ -42,10 +40,3 @@ contents: write
 pull_requests: read
 ```
 
-## Troubleshooting
-| Issue | Cause | Fix |
-|------|-------|-----|
-| `VAULT_GITHUB_TOKEN must be set` | Token not present in the agent environment | Ensure the agent exports `VAULT_GITHUB_TOKEN` |
-| `version-file must be within the workspace` | The file path points outside the repo | Use a relative path or a path under the workspace |
-| `Checksum verification failed` | Downloaded asset did not match checksums | Retry the build or check the upstream release |
-| `Checksum verification requires sha256sum or shasum` | Hash tool not available | Install `sha256sum` or `shasum` in the agent image |
