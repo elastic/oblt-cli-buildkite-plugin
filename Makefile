@@ -12,3 +12,7 @@ integration-test:
 .PHONY: plugin-lint
 plugin-lint:
 	@docker compose run plugin-lint
+
+.PHONY: shellcheck
+shellcheck:
+	@docker compose run --rm shellcheck
