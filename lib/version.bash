@@ -2,9 +2,6 @@
 
 set -euo pipefail
 
-# shellcheck disable=SC1091
-. "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/log.bash"
-
 # Get the version from the file
 # Also supports .tool-versions file (asdf-vm)
 # Arguments:
@@ -13,24 +10,18 @@ set -euo pipefail
 #   version
 function get_version_from_file() {
 	local -r filename=$1
-	local version
 	if [[ ! -f ${filename} ]]; then
-		log_fail "version-file not found: ${filename}"
+		>&2 echo "version-file not found: ${filename}"
 		return 1
 	fi
 	case $(basename "$filename") in
 	".tool-versions")
-		version=$(grep "^oblt-cli" "${filename}" | awk '{ printf $2 }')
+		grep "^oblt-cli" "${filename}" | awk '{ printf $2 }'
 		;;
 	*)
-		version=$(tr -d '[:space:]' <"${filename}")
+		tr -d '[:space:]' <"${filename}"
 		;;
 	esac
-	if [[ -z ${version} ]]; then
-		log_fail "version-file is empty or missing oblt-cli entry: ${filename}"
-		return 1
-	fi
-	echo "${version}"
 }
 
 # Get the version from the input or file

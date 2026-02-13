@@ -63,5 +63,5 @@ load "$PWD/lib/version"
 
 	# assert
 	assert_failure
-	assert_output "+++ :x: version-file not found: /plugin/non_existent_file"
+	assert_output "version-file not found: /plugin/non_existent_file"
 }
