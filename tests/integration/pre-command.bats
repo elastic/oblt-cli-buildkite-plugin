@@ -85,7 +85,7 @@ setup_curl_stub() {
 cleanup_curl_stub() {
 	local -r bin_dir=$1
 	unset CURL_STUB_ASSET_FILE
-	PATH="${PATH#${bin_dir}:}"
+	PATH="${PATH#"${bin_dir}":}"
 }
 
 @test "pre-command version from file" {
