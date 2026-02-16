@@ -5,35 +5,6 @@ load "$PWD/lib/asset"
 
 export VAULT_GITHUB_TOKEN="mock-token"
 
-create_curl_stub() {
-	local -r bin_dir=$1
-	cat >"${bin_dir}/curl" <<'EOF'
-#!/usr/bin/env bash
-
-set -euo pipefail
-
-output=""
-while [[ $# -gt 0 ]]; do
-	case "$1" in
-		-o)
-			output=$2
-			shift 2
-			;;
-		*)
-			shift
-			;;
-	esac
-done
-
-if [[ -z ${output} ]]; then
-	cat "${CURL_STUB_FILE}"
-else
-	cat "${CURL_STUB_FILE}" >"${output}"
-fi
-EOF
-	chmod +x "${bin_dir}/curl"
-}
-
 @test "Get asset name should return asset name" {
 	# arrange
 	local version="7.3.0"

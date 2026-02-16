@@ -1,14 +1,22 @@
 steps:
   - label: ":test_tube: Unit Tests"
+    agents:
+      provider: gcp
     command: make test
 
   - label: ":gear: Integration Tests"
+    agents:
+      provider: gcp    
     command: make integration-test
 
   - label: ":lint-roller: Plugin Lint"
+    agents:
+      provider: gcp
     command: make plugin-lint
 
   - label: ":shell: ShellCheck"
+    agents:
+      provider: gcp
     command: make shellcheck
 
   - label: integration-test with GITHUB_TOKEN
