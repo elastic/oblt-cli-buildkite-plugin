@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-echo "mocked oblt-cli output"
+echo "[2026-02-10T00:00:00.000Z]:[info]:Writing configuration file /home/plugin-tester/.oblt-cli/config.yaml"

@@ -39,3 +39,4 @@ The plugin requires the following GitHub token permissions in the [elastic/obser
 contents: write
 pull_requests: read
 ```
+
