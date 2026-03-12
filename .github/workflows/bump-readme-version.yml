@@ -1,0 +1,40 @@
+name: bump-readme-version
+
+on:
+  release:
+    types:
+      - published
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  bump:
+    runs-on: ubuntu-slim
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+      - name: Update version in README
+        run: |
+          NEW_VERSION="${GITHUB_REF#refs/tags/}"
+          sed -i "s|elastic/oblt-cli#v[0-9]*\.[0-9]*\.[0-9]*|elastic/oblt-cli#${NEW_VERSION}|g" README.md
+      - name: Create pull request
+        run: |
+          NEW_VERSION="${GITHUB_REF#refs/tags/}"
+          BRANCH="update-version-${NEW_VERSION}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git diff --quiet README.md && echo "No changes to commit" && exit 0
+          git checkout -b "${BRANCH}"
+          git add README.md
+          git commit -m "docs: bump plugin version to ${NEW_VERSION} in README"
+          git push origin "${BRANCH}"
+          gh pr create \
+            --title "docs: bump plugin version to ${NEW_VERSION} in README" \
+            --body "Automated version bump after release ${NEW_VERSION}." \
+            --base main \
+            --head "${BRANCH}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
