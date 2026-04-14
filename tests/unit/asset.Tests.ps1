@@ -22,6 +22,16 @@ Describe "Get-Os" {
 		Get-Os "Linux-5.4" | Should -Be "linux"
 	}
 
+	It "Should detect Windows via env:OS Windows_NT when no argument is given" {
+		$oldOs = $env:OS
+		try {
+			$env:OS = "Windows_NT"
+			Get-Os | Should -Be "windows"
+		} finally {
+			$env:OS = $oldOs
+		}
+	}
+
 	It "Should throw for unsupported OS" {
 		{ Get-Os "FreeBSD" } | Should -Throw "*Unsupported OS*"
 	}

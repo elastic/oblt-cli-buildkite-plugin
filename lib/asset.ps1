@@ -10,12 +10,12 @@ function Get-Os {
 
 	$sys = if ($System) {
 		$System
-	} elseif ($IsWindows) {
+	} elseif ($env:OS -eq "Windows_NT") {
 		"Windows"
-	} elseif ($IsMacOS) {
-		"Darwin"
 	} elseif ($IsLinux) {
 		"Linux"
+	} elseif ($IsMacOS) {
+		"Darwin"
 	} else {
 		""
 	}
