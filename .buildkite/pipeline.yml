@@ -4,6 +4,11 @@ steps:
       provider: gcp
     command: make test
 
+  - label: ":test_tube: Unit Tests (PowerShell)"
+    agents:
+      provider: gcp
+    command: make test-ps
+
   - label: ":lint-roller: Plugin Lint"
     agents:
       provider: gcp
@@ -41,6 +46,21 @@ steps:
       - elastic/oblt-cli#${BUILDKITE_COMMIT}:
           version-file: .default-oblt-cli-version
     command: .buildkite/scripts/create-cluster.sh
+
+  - label: "E2E - Create cluster (Windows AMD64)"
+    key: create-cluster-windows
+    agents:
+      provider: "aws"
+      instanceType: "m5.large"
+      imagePrefix: "core-windows-2019-amd64"
+    plugins:
+      - elastic/oblt-cli#${BUILDKITE_COMMIT}:
+          version-file: .default-oblt-cli-version
+    command: .buildkite/scripts/create-cluster.ps1
+
+  - label: "E2E - Get cluster name (Windows AMD64)"
+    depends_on: create-cluster-windows
+    command: buildkite-agent meta-data get cluster-name
 
 notify:
   - slack: "#observablt-bots"
