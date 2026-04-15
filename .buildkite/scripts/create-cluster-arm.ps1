@@ -11,4 +11,4 @@ oblt-cli --% cluster create custom --dry-run --template serverless --cluster-nam
 
 Write-Output "~~~ Add cluster name to meta-data"
 $clusterName = (Get-Content "$env:OBLT_CLI_OUTPUT_FILE" | ConvertFrom-Json).ClusterName
-buildkite-agent meta-data set cluster-name-amd $clusterName
+buildkite-agent meta-data set cluster-name-arm $clusterName
