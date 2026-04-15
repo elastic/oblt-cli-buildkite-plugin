@@ -68,9 +68,26 @@ steps:
           version-file: .default-oblt-cli-version
     command: .buildkite/scripts/create-cluster.ps1
 
-  - label: "E2E - Get cluster name (Windows AMD64)"
+  - label: "E2E - Destroy cluster (Windows AMD64)"
     depends_on: create-cluster-windows
-    command: buildkite-agent meta-data get cluster-name
+    agents:
+      provider: gcp
+      image: family/core-windows-2022
+    plugins:
+      - elastic/oblt-cli#${BUILDKITE_COMMIT}:
+          version-file: .default-oblt-cli-version
+    command: .buildkite/scripts/destroy-cluster.ps1
+
+  - label: "E2E - Destroy cluster (Windows ARM64)"
+    depends_on: create-cluster-windows-arm
+    agents:
+      provider: azure
+      image: core-windows-11-ent-arm64
+      vmSize: Standard_D4ps_v6
+    plugins:
+      - elastic/oblt-cli#${BUILDKITE_COMMIT}:
+          version-file: .default-oblt-cli-version
+    command: .buildkite/scripts/destroy-cluster.ps1
 
 notify:
   - slack: "#observablt-bots"
