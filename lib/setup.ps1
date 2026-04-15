@@ -24,7 +24,7 @@ function Invoke-Setup {
 	$assetId = Get-AssetId $Version
 	New-Item -ItemType Directory -Force -Path $BinDir | Out-Null
 	Invoke-DownloadAsset $assetId $BinDir
-	$binExt = if ($IsWindows) { ".exe" } else { "" }
+	$binExt = if ($env:OS -eq "Windows_NT") { ".exe" } else { "" }
 	& "$BinDir/oblt-cli$binExt" configure `
 		--git-http-mode `
 		"--username=$Username" `
