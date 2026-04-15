@@ -1,0 +1,7 @@
+FROM mcr.microsoft.com/powershell:lts-alpine-3.20
+
+RUN pwsh -Command "\
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; \
+    Register-PSRepository -Default -ErrorAction SilentlyContinue; \
+    Set-PSRepository PSGallery -InstallationPolicy Trusted; \
+    Install-Module Pester -Force -MinimumVersion 5.0.0"
