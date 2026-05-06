@@ -1,9 +1,13 @@
 .PHONY: all
-all: test plugin-lint shellcheck integration-test
+all: test test-ps plugin-lint shellcheck integration-test
 
 .PHONY: test
 test:
 	@docker compose run --rm test
+
+.PHONY: test-ps
+test-ps:
+	@docker compose run --rm test-ps
 
 .PHONY: integration-test
 integration-test:

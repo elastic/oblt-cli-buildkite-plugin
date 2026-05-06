@@ -12,7 +12,7 @@ A Buildkite plugin to set up oblt-cli.
 ## Properties
 | Name                         | Type     | Default            | Description                                                                                                         |
 |------------------------------|----------|--------------------|---------------------------------------------------------------------------------------------------------------------|
-| `version`                    | `string` | `7.3.0`            | The version of the oblt-cli to install.                                                                             |
+| `version`                    | `string` | `7.42.8`            | The version of the oblt-cli to install.                                                                             |
 | <nobr>`version-file`</nobr>  | `string` | -                  | The file to get the version from. If both `version` and `version-file` are provided, the plugin will use `version`. |
 | `username`                   | `string` | `obltmachine`      | The oblt-cli username                                                                                               |
 | <nobr>`slack-channel`</nobr> | `string` | `#observablt-bots` | The slack channel for oblt-cli notifications                                                                        |
@@ -25,7 +25,7 @@ steps:
     agents:
       provider: gcp # currently only works on the gcp provider
     plugins:
-      - elastic/oblt-cli#v0.3.0:
+      - elastic/oblt-cli#v0.4.0:
           version-file: .tool-versions
 
 ```
