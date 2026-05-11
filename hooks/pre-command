@@ -4,7 +4,8 @@ set -euo pipefail
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-OBLT_CLI_USERNAME="${BUILDKITE_PLUGIN_OBLT_CLI_USERNAME:-obltmachine}"
+_default_username="${BUILDKITE_REPO:+$(basename "${BUILDKITE_REPO}" .git)}"
+OBLT_CLI_USERNAME="${BUILDKITE_PLUGIN_OBLT_CLI_USERNAME:-${_default_username:-obltmachine}}"
 OBLT_CLI_SLACK_CHANNEL="${BUILDKITE_PLUGIN_OBLT_CLI_SLACK_CHANNEL:-#observablt-bots}"
 OBLT_CLI_VERSION="${BUILDKITE_PLUGIN_OBLT_CLI_VERSION:-}"
 OBLT_CLI_VERSION_FILE="${BUILDKITE_PLUGIN_OBLT_CLI_VERSION_FILE:-"${DIR}/../.default-oblt-cli-version"}"
