@@ -55,7 +55,7 @@ steps:
     plugins:
       - elastic/oblt-cli#${BUILDKITE_COMMIT}:
           version-file: .default-oblt-cli-version
-    command: .buildkite/scripts/create-cluster.ps1 "--dry-run"
+    command: .buildkite/scripts/create-cluster.ps1
 
   - label: "E2E - Create cluster (Windows ARM64)"
     key: create-cluster-windows-arm
