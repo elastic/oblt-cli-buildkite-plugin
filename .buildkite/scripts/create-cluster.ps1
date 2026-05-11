@@ -11,6 +11,7 @@ $parametersJson = @{
     ProjectType = "observability"
     Target = "qa"
     EphemeralCluster = "true"
+    ExpireInHours = "1"
 } | ConvertTo-Json -Compress
 
 $parametersString = $parametersJson -replace '"', '\"'
@@ -25,7 +26,7 @@ if ($Flag -eq "--dry-run") {
 # parser.  This is required for PowerShell 5.1 (Windows PowerShell), which does
 # not escape embedded double-quotes when building the native-process command
 # line.  $PWD cannot be used after --%, so export it as an env-var first.
-$command = "oblt-cli --% cluster create custom $dryRunFlag --template serverless --cluster-name-prefix=oblt-cli-buildkite-plugin ""--parameters=$parametersString"" ""--output-file=%OBLT_CLI_OUTPUT_FILE%"""
+$command = "oblt-cli --% cluster create custom $dryRunFlag --template serverless --cluster-name-prefix=e2e-tests ""--parameters=$parametersString"" ""--output-file=%OBLT_CLI_OUTPUT_FILE%"""
 Invoke-Expression $command
 
 Write-Output "~~~ Add cluster name to meta-data"

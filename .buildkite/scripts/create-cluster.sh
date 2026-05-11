@@ -13,8 +13,9 @@ fi
 
 oblt-cli cluster create custom \
 	--template serverless \
-	--cluster-name-prefix=oblt-cli-buildkite-plugin \
+	--cluster-name-prefix=e2e-tests \
 	--parameters='{"ProjectType":"observability","Target":"qa","EphemeralCluster":"true"}' \
+	--parameter "ExpireInHours=1" \
 	--output-file="${PWD}/cluster-info.json" \
 	$DRY_RUN_ARG
 
