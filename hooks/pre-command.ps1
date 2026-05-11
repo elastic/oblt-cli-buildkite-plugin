@@ -2,7 +2,9 @@ $ErrorActionPreference = "Stop"
 
 $DIR = Split-Path -Parent $MyInvocation.MyCommand.Path
 
-$obltCliUsername     = if ($env:BUILDKITE_PLUGIN_OBLT_CLI_USERNAME)       { $env:BUILDKITE_PLUGIN_OBLT_CLI_USERNAME }       else { "obltmachine" }
+$obltCliUsername     = if ($env:BUILDKITE_PLUGIN_OBLT_CLI_USERNAME) { $env:BUILDKITE_PLUGIN_OBLT_CLI_USERNAME } `
+                       elseif ($env:BUILDKITE_REPO)                { [System.IO.Path]::GetFileNameWithoutExtension(($env:BUILDKITE_REPO -split '[/:]')[-1]) } `
+                       else                                         { "obltmachine" }
 $obltCliSlackChannel = if ($env:BUILDKITE_PLUGIN_OBLT_CLI_SLACK_CHANNEL)  { $env:BUILDKITE_PLUGIN_OBLT_CLI_SLACK_CHANNEL }  else { "#observablt-bots" }
 $obltCliVersion      = if ($env:BUILDKITE_PLUGIN_OBLT_CLI_VERSION)        { $env:BUILDKITE_PLUGIN_OBLT_CLI_VERSION }        else { "" }
 $obltCliVersionFile  = if ($env:BUILDKITE_PLUGIN_OBLT_CLI_VERSION_FILE)   { $env:BUILDKITE_PLUGIN_OBLT_CLI_VERSION_FILE }   else { Join-Path $DIR ".." ".default-oblt-cli-version" }

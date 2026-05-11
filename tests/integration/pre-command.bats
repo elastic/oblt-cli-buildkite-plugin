@@ -76,3 +76,58 @@ stub_git() {
 	# cleanup
 	unstub git
 }
+
+@test "pre-command username defaults to repository name from BUILDKITE_REPO" {
+	# arrange
+	stub git \
+		"config --global user.name my-project : echo 'git: Set user.name'" \
+		"config --global user.email my-project@users.noreply.github.com : echo 'git: Set user.email'"
+
+	# act
+	run env BUILDKITE_REPO="git@github.com:acme-inc/my-project.git" \
+		"$PWD/hooks/pre-command"
+
+	# assert
+	assert_success
+	assert_output --partial "Writing configuration file /home/plugin-tester/.oblt-cli/config.yaml"
+
+	# cleanup
+	unstub git
+}
+
+@test "pre-command username defaults to repository name from BUILDKITE_REPO (https)" {
+	# arrange
+	stub git \
+		"config --global user.name my-project : echo 'git: Set user.name'" \
+		"config --global user.email my-project@users.noreply.github.com : echo 'git: Set user.email'"
+
+	# act
+	run env BUILDKITE_REPO="https://github.com/acme-inc/my-project.git" \
+		"$PWD/hooks/pre-command"
+
+	# assert
+	assert_success
+	assert_output --partial "Writing configuration file /home/plugin-tester/.oblt-cli/config.yaml"
+
+	# cleanup
+	unstub git
+}
+
+@test "pre-command explicit username overrides BUILDKITE_REPO" {
+	# arrange
+	stub git \
+		"config --global user.name custom-user : echo 'git: Set user.name'" \
+		"config --global user.email custom-user@users.noreply.github.com : echo 'git: Set user.email'"
+
+	# act
+	run env BUILDKITE_REPO="git@github.com:acme-inc/my-project.git" \
+		BUILDKITE_PLUGIN_OBLT_CLI_USERNAME="custom-user" \
+		"$PWD/hooks/pre-command"
+
+	# assert
+	assert_success
+	assert_output --partial "Writing configuration file /home/plugin-tester/.oblt-cli/config.yaml"
+
+	# cleanup
+	unstub git
+}

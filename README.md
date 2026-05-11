@@ -14,7 +14,7 @@ A Buildkite plugin to set up oblt-cli.
 |------------------------------|----------|--------------------|---------------------------------------------------------------------------------------------------------------------|
 | `version`                    | `string` | `7.42.8`            | The version of the oblt-cli to install.                                                                             |
 | <nobr>`version-file`</nobr>  | `string` | -                  | The file to get the version from. If both `version` and `version-file` are provided, the plugin will use `version`. |
-| `username`                   | `string` | `obltmachine`      | The oblt-cli username                                                                                               |
+| `username`                   | `string` | repository name    | The oblt-cli username. Defaults to the repository name derived from `BUILDKITE_REPO` (e.g. `my-project` from `git@github.com:acme-inc/my-project.git`), or `obltmachine` if `BUILDKITE_REPO` is not set. |
 | <nobr>`slack-channel`</nobr> | `string` | `#observablt-bots` | The slack channel for oblt-cli notifications                                                                        |
 
 ## Usage
