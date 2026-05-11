@@ -1,8 +1,8 @@
-$ErrorActionPreference = "Stop"
-
 param(
     [string]$Flag = ""
 )
+
+$ErrorActionPreference = "Stop"
 
 Write-Output "--- Create cluster"
 $env:OBLT_CLI_OUTPUT_FILE = "$PWD\cluster-info.json"
