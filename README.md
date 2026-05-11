@@ -16,6 +16,10 @@ A Buildkite plugin to set up oblt-cli.
 | <nobr>`version-file`</nobr>  | `string` | -                  | The file to get the version from. If both `version` and `version-file` are provided, the plugin will use `version`. |
 | `username`                   | `string` | `obltmachine`      | The oblt-cli username                                                                                               |
 | <nobr>`slack-channel`</nobr> | `string` | `#observablt-bots` | The slack channel for oblt-cli notifications                                                                        |
+| `org`                        | `string` | -                  | **Required.** The GitHub organization for oblt-cli                                                                  |
+| `division`                   | `string` | -                  | **Required.** The division for oblt-cli                                                                             |
+| `project`                    | `string` | -                  | **Required.** The project for oblt-cli                                                                              |
+| `team`                       | `string` | -                  | **Required.** The team for oblt-cli                                                                                 |
 
 ## Usage
 
@@ -27,6 +31,10 @@ steps:
     plugins:
       - elastic/oblt-cli#v0.4.0:
           version-file: .tool-versions
+          org: elastic
+          division: engineering
+          project: observability
+          team: my-team
 
 ```
 

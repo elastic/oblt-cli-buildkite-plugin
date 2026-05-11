@@ -17,6 +17,10 @@ stub_git() {
 
 	# act
 	run env BUILDKITE_PLUGIN_OBLT_CLI_VERSION_FILE="${PWD}/tests/fixtures/.oblt-cli-version" \
+		BUILDKITE_PLUGIN_OBLT_CLI_ORG="elastic" \
+		BUILDKITE_PLUGIN_OBLT_CLI_DIVISION="engineering" \
+		BUILDKITE_PLUGIN_OBLT_CLI_PROJECT="observability" \
+		BUILDKITE_PLUGIN_OBLT_CLI_TEAM="my-team" \
 		"$PWD/hooks/pre-command"
 
 	# assert
@@ -34,6 +38,10 @@ stub_git() {
 
 	# act
 	run env BUILDKITE_PLUGIN_OBLT_CLI_VERSION="7.2.5" \
+		BUILDKITE_PLUGIN_OBLT_CLI_ORG="elastic" \
+		BUILDKITE_PLUGIN_OBLT_CLI_DIVISION="engineering" \
+		BUILDKITE_PLUGIN_OBLT_CLI_PROJECT="observability" \
+		BUILDKITE_PLUGIN_OBLT_CLI_TEAM="my-team" \
 		"$PWD/hooks/pre-command"
 
 	# assert
@@ -50,7 +58,11 @@ stub_git() {
 	stub_git
 
 	# act
-	run "$PWD/hooks/pre-command"
+	run env BUILDKITE_PLUGIN_OBLT_CLI_ORG="elastic" \
+		BUILDKITE_PLUGIN_OBLT_CLI_DIVISION="engineering" \
+		BUILDKITE_PLUGIN_OBLT_CLI_PROJECT="observability" \
+		BUILDKITE_PLUGIN_OBLT_CLI_TEAM="my-team" \
+		"$PWD/hooks/pre-command"
 
 	# assert
 	version=$(cat "${PWD}/.default-oblt-cli-version")
@@ -67,7 +79,12 @@ stub_git() {
 	stub_git
 
 	# act
-	run env BUILDKITE_PLUGIN_OBLT_CLI_VERSION_FILE="${PWD}/non-existent" "$PWD/hooks/pre-command"
+	run env BUILDKITE_PLUGIN_OBLT_CLI_VERSION_FILE="${PWD}/non-existent" \
+		BUILDKITE_PLUGIN_OBLT_CLI_ORG="elastic" \
+		BUILDKITE_PLUGIN_OBLT_CLI_DIVISION="engineering" \
+		BUILDKITE_PLUGIN_OBLT_CLI_PROJECT="observability" \
+		BUILDKITE_PLUGIN_OBLT_CLI_TEAM="my-team" \
+		"$PWD/hooks/pre-command"
 
 	# assert
 	assert_failure
@@ -75,4 +92,52 @@ stub_git() {
 
 	# cleanup
 	unstub git
+}
+
+@test "pre-command missing org should fail" {
+	# act
+	run env BUILDKITE_PLUGIN_OBLT_CLI_DIVISION="engineering" \
+		BUILDKITE_PLUGIN_OBLT_CLI_PROJECT="observability" \
+		BUILDKITE_PLUGIN_OBLT_CLI_TEAM="my-team" \
+		"$PWD/hooks/pre-command"
+
+	# assert
+	assert_failure
+	assert_output --partial "The 'org' plugin property is required."
+}
+
+@test "pre-command missing division should fail" {
+	# act
+	run env BUILDKITE_PLUGIN_OBLT_CLI_ORG="elastic" \
+		BUILDKITE_PLUGIN_OBLT_CLI_PROJECT="observability" \
+		BUILDKITE_PLUGIN_OBLT_CLI_TEAM="my-team" \
+		"$PWD/hooks/pre-command"
+
+	# assert
+	assert_failure
+	assert_output --partial "The 'division' plugin property is required."
+}
+
+@test "pre-command missing project should fail" {
+	# act
+	run env BUILDKITE_PLUGIN_OBLT_CLI_ORG="elastic" \
+		BUILDKITE_PLUGIN_OBLT_CLI_DIVISION="engineering" \
+		BUILDKITE_PLUGIN_OBLT_CLI_TEAM="my-team" \
+		"$PWD/hooks/pre-command"
+
+	# assert
+	assert_failure
+	assert_output --partial "The 'project' plugin property is required."
+}
+
+@test "pre-command missing team should fail" {
+	# act
+	run env BUILDKITE_PLUGIN_OBLT_CLI_ORG="elastic" \
+		BUILDKITE_PLUGIN_OBLT_CLI_DIVISION="engineering" \
+		BUILDKITE_PLUGIN_OBLT_CLI_PROJECT="observability" \
+		"$PWD/hooks/pre-command"
+
+	# assert
+	assert_failure
+	assert_output --partial "The 'team' plugin property is required."
 }

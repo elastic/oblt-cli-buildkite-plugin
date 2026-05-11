@@ -11,6 +11,10 @@ $CURR_DIR = Split-Path -Parent $MyInvocation.MyCommand.Path
 #   $Username: The oblt-cli username
 #   $SlackChannel: The slack channel for notifications
 #   $BinDir: The directory to install the binary
+#   $Org: The GitHub organization
+#   $Division: The division
+#   $Project: The project
+#   $Team: The team
 # Returns:
 #   None
 function Invoke-Setup {
@@ -18,7 +22,11 @@ function Invoke-Setup {
 		[Parameter(Mandatory = $true)][string]$Version,
 		[Parameter(Mandatory = $true)][string]$Username,
 		[Parameter(Mandatory = $true)][string]$SlackChannel,
-		[Parameter(Mandatory = $true)][string]$BinDir
+		[Parameter(Mandatory = $true)][string]$BinDir,
+		[Parameter(Mandatory = $true)][string]$Org,
+		[Parameter(Mandatory = $true)][string]$Division,
+		[Parameter(Mandatory = $true)][string]$Project,
+		[Parameter(Mandatory = $true)][string]$Team
 	)
 
 	$assetId = Get-AssetId $Version
@@ -28,5 +36,9 @@ function Invoke-Setup {
 	& "$BinDir/oblt-cli$binExt" configure `
 		--git-http-mode `
 		"--username=$Username" `
-		"--slack-channel=$SlackChannel"
+		"--slack-channel=$SlackChannel" `
+		"--org=$Org" `
+		"--division=$Division" `
+		"--project=$Project" `
+		"--team=$Team"
 }

@@ -23,4 +23,21 @@ configuration:
     slack-channel:
       type: string
       description: The Slack channel to post notifications to
+    org:
+      type: string
+      description: The GitHub organization for oblt-cli
+    division:
+      type: string
+      description: The division for oblt-cli
+    project:
+      type: string
+      description: The project for oblt-cli
+    team:
+      type: string
+      description: The team for oblt-cli
+  required:
+    - org
+    - division
+    - project
+    - team
   additionalProperties: false
