@@ -25,7 +25,7 @@ steps:
     agents:
       provider: gcp # currently only works on the gcp provider
     plugins:
-      - elastic/oblt-cli#v0.4.0:
+      - elastic/oblt-cli#v0.4.1:
           version-file: .tool-versions
 
 ```
