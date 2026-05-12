@@ -23,4 +23,7 @@ configuration:
     slack-channel:
       type: string
       description: The Slack channel to post notifications to
+    gcp-project:
+      type: string
+      description: The GCP project to interact with (elastic-observability by default)
   additionalProperties: false
