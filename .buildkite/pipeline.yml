@@ -47,8 +47,7 @@ steps:
           version-file: .default-oblt-cli-version
     command: .buildkite/scripts/create-cluster.sh "--dry-run"
 
-  - label: "E2E - Create cluster (Windows 2016 AMD64)"
-    key: create-cluster-windows
+  - label: "E2E - Create cluster dry-run mode (Windows 2016 AMD64)"
     agents:
       provider: gcp
       image: family/core-windows-2016
