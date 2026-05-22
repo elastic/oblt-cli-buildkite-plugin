@@ -132,15 +132,16 @@ function Invoke-DownloadAsset {
 	Enable-Tls12
 	Write-Output "Downloading oblt-cli asset URL: $assetUrl"
 	$tempFile = [System.IO.Path]::GetTempFileName()
+	$tarTargetDir = if ($env:OS -eq "Windows_NT") { $TargetDir -replace "\\", "/" } else { $TargetDir }
 	try {
 		Invoke-WebRequest `
 			-Uri $assetUrl `
 			-Headers $headers `
 			-OutFile $tempFile
 		if (Test-TarSupportsForceLocal) {
-			tar --force-local -xzf $tempFile -C $TargetDir
+			tar --force-local -xzf $tempFile -C $tarTargetDir
 		} else {
-			tar -xzf $tempFile -C $TargetDir
+			tar -xzf $tempFile -C $tarTargetDir
 		}
 	} finally {
 		Remove-Item $tempFile -Force -ErrorAction SilentlyContinue

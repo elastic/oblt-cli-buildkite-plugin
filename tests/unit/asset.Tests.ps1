@@ -155,4 +155,21 @@ Describe "Invoke-DownloadAsset" {
 		Assert-MockCalled tar -Times 1 -Exactly -ParameterFilter { $args[0] -eq "-xzf" }
 		Remove-Item $tmpDir -Recurse -Force
 	}
+
+	It "Should normalize Windows -C target dir separators for tar" {
+		$originalOs = $env:OS
+		try {
+			$env:OS = "Windows_NT"
+			Mock Invoke-WebRequest { param($Uri, $Headers, $OutFile) Set-Content -Path $OutFile -Value "mock" }
+			Mock Enable-Tls12 {}
+			Mock Test-TarSupportsForceLocal { $true }
+			Mock tar {}
+
+			Invoke-DownloadAsset "176068054" "C:\Users\buildkite\.oblt-cli\bin"
+
+			Assert-MockCalled tar -Times 1 -Exactly -ParameterFilter { $args[4] -eq "C:/Users/buildkite/.oblt-cli/bin" }
+		} finally {
+			$env:OS = $originalOs
+		}
+	}
 }
