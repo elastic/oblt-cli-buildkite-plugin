@@ -83,15 +83,18 @@ Describe "Get-AssetName" {
 
 Describe "Get-AssetId" {
 	It "Should return asset id" {
+		Mock Enable-Tls12 {}
 		Mock Invoke-RestMethod {
 			Get-Content "$PSScriptRoot/../../tests/fixtures/release.json" -Raw | ConvertFrom-Json
 		}
 
 		# On Linux, auto-detected OS is linux/amd64 → id 176068054
 		Get-AssetId "7.3.0" | Should -Be 176068054
+		Assert-MockCalled Enable-Tls12 -Times 1 -Exactly
 	}
 
 	It "Should return Windows asset id when OS is Windows" {
+		Mock Enable-Tls12 {}
 		Mock Invoke-RestMethod {
 			Get-Content "$PSScriptRoot/../../tests/fixtures/release.json" -Raw | ConvertFrom-Json
 		}
@@ -99,6 +102,7 @@ Describe "Get-AssetId" {
 		Mock Get-Arch { return "amd64" }
 
 		Get-AssetId "7.3.0" | Should -Be 176068057
+		Assert-MockCalled Enable-Tls12 -Times 1 -Exactly
 	}
 }
 
@@ -113,10 +117,12 @@ Describe "Invoke-DownloadAsset" {
 			param($Uri, $Headers, $OutFile)
 			Copy-Item $script:tarFile $OutFile
 		}
+		Mock Enable-Tls12 {}
 
 		Invoke-DownloadAsset "176068054" $tmpDir.FullName
 
 		Test-Path (Join-Path $tmpDir.FullName "oblt-cli") | Should -BeTrue
+		Assert-MockCalled Enable-Tls12 -Times 1 -Exactly
 
 		Remove-Item $tmpDir -Recurse -Force
 		Remove-Item $script:tarFile -Force

@@ -79,6 +79,14 @@ function Get-AssetName {
 #   $Version: The oblt-cli version
 # Returns:
 #  The asset ID
+function Enable-Tls12 {
+	$tls12 = [Enum]::GetNames([System.Net.SecurityProtocolType]) -contains "Tls12"
+	if ($tls12) {
+		[System.Net.ServicePointManager]::SecurityProtocol = `
+			[System.Net.ServicePointManager]::SecurityProtocol -bor [System.Net.SecurityProtocolType]::Tls12
+	}
+}
+
 function Get-AssetId {
 	param([Parameter(Mandatory = $true)][string]$Version)
 
@@ -88,6 +96,7 @@ function Get-AssetId {
 		"Authorization"        = "Bearer $env:VAULT_GITHUB_TOKEN"
 		"X-GitHub-Api-Version" = "2022-11-28"
 	}
+	Enable-Tls12
 	$release = Invoke-RestMethod `
 		-Uri "https://api.github.com/repos/elastic/observability-test-environments/releases/tags/$Version" `
 		-Headers $headers
@@ -114,6 +123,7 @@ function Invoke-DownloadAsset {
 		"Authorization"        = "Bearer $env:VAULT_GITHUB_TOKEN"
 		"X-GitHub-Api-Version" = "2022-11-28"
 	}
+	Enable-Tls12
 	$tempFile = [System.IO.Path]::GetTempFileName()
 	try {
 		Invoke-WebRequest `
