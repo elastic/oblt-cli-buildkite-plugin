@@ -87,6 +87,11 @@ function Enable-Tls12 {
 	}
 }
 
+function Test-TarSupportsForceLocal {
+	$helpText = (& tar --help 2>&1 | Out-String)
+	return $helpText -match "(^|\s)--force-local(\s|,|$)"
+}
+
 function Get-AssetId {
 	param([Parameter(Mandatory = $true)][string]$Version)
 
@@ -132,7 +137,11 @@ function Invoke-DownloadAsset {
 			-Uri $assetUrl `
 			-Headers $headers `
 			-OutFile $tempFile
-		tar --force-local -xzf $tempFile -C $TargetDir
+		if (Test-TarSupportsForceLocal) {
+			tar --force-local -xzf $tempFile -C $TargetDir
+		} else {
+			tar -xzf $tempFile -C $TargetDir
+		}
 	} finally {
 		Remove-Item $tempFile -Force -ErrorAction SilentlyContinue
 	}

@@ -129,4 +129,30 @@ Describe "Invoke-DownloadAsset" {
 		Remove-Item $tmpDir -Recurse -Force
 		Remove-Item $script:tarFile -Force
 	}
+
+	It "Should use --force-local when tar supports it" {
+		$tmpDir = New-Item -ItemType Directory -Path (Join-Path ([System.IO.Path]::GetTempPath()) "oblt-cli-test-$([System.Guid]::NewGuid().ToString())")
+		Mock Invoke-WebRequest { param($Uri, $Headers, $OutFile) Set-Content -Path $OutFile -Value "mock" }
+		Mock Enable-Tls12 {}
+		Mock Test-TarSupportsForceLocal { $true }
+		Mock tar {}
+
+		Invoke-DownloadAsset "176068054" $tmpDir.FullName
+
+		Assert-MockCalled tar -Times 1 -Exactly -ParameterFilter { $args[0] -eq "--force-local" }
+		Remove-Item $tmpDir -Recurse -Force
+	}
+
+	It "Should not use --force-local when tar does not support it" {
+		$tmpDir = New-Item -ItemType Directory -Path (Join-Path ([System.IO.Path]::GetTempPath()) "oblt-cli-test-$([System.Guid]::NewGuid().ToString())")
+		Mock Invoke-WebRequest { param($Uri, $Headers, $OutFile) Set-Content -Path $OutFile -Value "mock" }
+		Mock Enable-Tls12 {}
+		Mock Test-TarSupportsForceLocal { $false }
+		Mock tar {}
+
+		Invoke-DownloadAsset "176068054" $tmpDir.FullName
+
+		Assert-MockCalled tar -Times 1 -Exactly -ParameterFilter { $args[0] -eq "-xzf" }
+		Remove-Item $tmpDir -Recurse -Force
+	}
 }
