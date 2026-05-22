@@ -79,6 +79,19 @@ function Get-AssetName {
 #   $Version: The oblt-cli version
 # Returns:
 #  The asset ID
+function Enable-Tls12 {
+	$tls12 = [Enum]::GetNames([System.Net.SecurityProtocolType]) -contains "Tls12"
+	if ($tls12) {
+		[System.Net.ServicePointManager]::SecurityProtocol = `
+			[System.Net.ServicePointManager]::SecurityProtocol -bor [System.Net.SecurityProtocolType]::Tls12
+	}
+}
+
+function Test-TarSupportsForceLocal {
+	$helpText = (& tar --help 2>&1 | Out-String)
+	return $helpText -match "(^|\s)--force-local(\s|,|$)"
+}
+
 function Get-AssetId {
 	param([Parameter(Mandatory = $true)][string]$Version)
 
@@ -88,6 +101,7 @@ function Get-AssetId {
 		"Authorization"        = "Bearer $env:VAULT_GITHUB_TOKEN"
 		"X-GitHub-Api-Version" = "2022-11-28"
 	}
+	Enable-Tls12
 	$release = Invoke-RestMethod `
 		-Uri "https://api.github.com/repos/elastic/observability-test-environments/releases/tags/$Version" `
 		-Headers $headers
@@ -109,18 +123,26 @@ function Invoke-DownloadAsset {
 		[Parameter(Mandatory = $true)][string]$TargetDir
 	)
 
+	$assetUrl = "https://api.github.com/repos/elastic/observability-test-environments/releases/assets/$AssetId"
 	$headers  = @{
 		"Accept"               = "application/octet-stream"
 		"Authorization"        = "Bearer $env:VAULT_GITHUB_TOKEN"
 		"X-GitHub-Api-Version" = "2022-11-28"
 	}
+	Enable-Tls12
+	Write-Output "Downloading oblt-cli asset URL: $assetUrl"
 	$tempFile = [System.IO.Path]::GetTempFileName()
+	$tarTargetDir = if ($env:OS -eq "Windows_NT") { $TargetDir -replace "\\", "/" } else { $TargetDir }
 	try {
 		Invoke-WebRequest `
-			-Uri "https://api.github.com/repos/elastic/observability-test-environments/releases/assets/$AssetId" `
+			-Uri $assetUrl `
 			-Headers $headers `
 			-OutFile $tempFile
-		tar -xzf $tempFile -C $TargetDir
+		if (Test-TarSupportsForceLocal) {
+			tar --force-local -xzf $tempFile -C $tarTargetDir
+		} else {
+			tar -xzf $tempFile -C $tarTargetDir
+		}
 	} finally {
 		Remove-Item $tempFile -Force -ErrorAction SilentlyContinue
 	}
