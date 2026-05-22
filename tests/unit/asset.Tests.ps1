@@ -119,10 +119,12 @@ Describe "Invoke-DownloadAsset" {
 		}
 		Mock Enable-Tls12 {}
 
-		Invoke-DownloadAsset "176068054" $tmpDir.FullName
+		$output = Invoke-DownloadAsset "176068054" $tmpDir.FullName
 
 		Test-Path (Join-Path $tmpDir.FullName "oblt-cli") | Should -BeTrue
+		$output | Should -Contain "Downloading oblt-cli asset URL: https://api.github.com/repos/elastic/observability-test-environments/releases/assets/176068054"
 		Assert-MockCalled Enable-Tls12 -Times 1 -Exactly
+		Assert-MockCalled Invoke-WebRequest -Times 1 -Exactly -ParameterFilter { $Uri -eq "https://api.github.com/repos/elastic/observability-test-environments/releases/assets/176068054" }
 
 		Remove-Item $tmpDir -Recurse -Force
 		Remove-Item $script:tarFile -Force

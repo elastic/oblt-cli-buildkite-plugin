@@ -118,19 +118,21 @@ function Invoke-DownloadAsset {
 		[Parameter(Mandatory = $true)][string]$TargetDir
 	)
 
+	$assetUrl = "https://api.github.com/repos/elastic/observability-test-environments/releases/assets/$AssetId"
 	$headers  = @{
 		"Accept"               = "application/octet-stream"
 		"Authorization"        = "Bearer $env:VAULT_GITHUB_TOKEN"
 		"X-GitHub-Api-Version" = "2022-11-28"
 	}
 	Enable-Tls12
+	Write-Output "Downloading oblt-cli asset URL: $assetUrl"
 	$tempFile = [System.IO.Path]::GetTempFileName()
 	try {
 		Invoke-WebRequest `
-			-Uri "https://api.github.com/repos/elastic/observability-test-environments/releases/assets/$AssetId" `
+			-Uri $assetUrl `
 			-Headers $headers `
 			-OutFile $tempFile
-		tar -xzf $tempFile -C $TargetDir
+		tar --force-local -xzf $tempFile -C $TargetDir
 	} finally {
 		Remove-Item $tempFile -Force -ErrorAction SilentlyContinue
 	}
