@@ -46,4 +46,5 @@ if [[ "${OBLT_CLI_COMMAND}" == "credentials" ]]; then
 		fi
 		export "${key}=${value}"
 	done < "${ENV_FILE}"
+	rm -f "${ENV_FILE}"
 fi
