@@ -24,3 +24,26 @@ git config --global user.email "${GIT_EMAIL:-"${OBLT_CLI_USERNAME}@users.noreply
 VERSION=$(get_version_from_input_or_file "${OBLT_CLI_VERSION}" "${OBLT_CLI_VERSION_FILE}")
 echo "~~~ :elastic-apm: Set up oblt-cli ${VERSION}"
 setup "${VERSION}" "${OBLT_CLI_USERNAME}" "${OBLT_CLI_SLACK_CHANNEL}" "${OBLT_CLI_BIN}"
+
+OBLT_CLI_COMMAND="${BUILDKITE_PLUGIN_OBLT_CLI_COMMAND:-}"
+
+if [[ "${OBLT_CLI_COMMAND}" == "credentials" ]]; then
+	OBLT_CLI_CLUSTER_NAME="${BUILDKITE_PLUGIN_OBLT_CLI_CLUSTER_NAME:-}"
+	if [[ -z "${OBLT_CLI_CLUSTER_NAME}" ]]; then
+		>&2 echo "The cluster-name input is required when command is 'credentials'."
+		exit 1
+	fi
+	echo "~~~ :elastic-apm: Fetching credentials for cluster ${OBLT_CLI_CLUSTER_NAME}"
+	ENV_FILE=$(mktemp)
+	trap 'rm -f "${ENV_FILE}"' EXIT
+	oblt-cli cluster secrets env --cluster-name "${OBLT_CLI_CLUSTER_NAME}" --output-file "${ENV_FILE}"
+	while IFS= read -r line || [[ -n "${line}" ]]; do
+		key="${line%%=*}"
+		value="${line#*=}"
+		[[ -z "${key}" || "${key}" == \#* ]] && continue
+		if [[ -n "${value}" ]]; then
+			buildkite-agent redactor add "${value}"
+		fi
+		export "${key}=${value}"
+	done < "${ENV_FILE}"
+fi

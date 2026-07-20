@@ -131,3 +131,42 @@ stub_git() {
 	# cleanup
 	unstub git
 }
+
+@test "pre-command credentials command fetches and masks env vars" {
+	# arrange
+	stub_git
+	stub oblt-cli \
+		"cluster secrets env --cluster-name my-cluster --output-file * : echo 'ELASTICSEARCH_HOST=http://es:9200' > \"\${7}\""
+	stub buildkite-agent \
+		"redactor add * : echo 'masked'"
+
+	# act
+	run env BUILDKITE_PLUGIN_OBLT_CLI_COMMAND="credentials" \
+		BUILDKITE_PLUGIN_OBLT_CLI_CLUSTER_NAME="my-cluster" \
+		"$PWD/hooks/pre-command"
+
+	# assert
+	assert_success
+	assert_output --partial "Fetching credentials for cluster my-cluster"
+
+	# cleanup
+	unstub git
+	unstub oblt-cli
+	unstub buildkite-agent
+}
+
+@test "pre-command credentials command requires cluster-name" {
+	# arrange
+	stub_git
+
+	# act
+	run env BUILDKITE_PLUGIN_OBLT_CLI_COMMAND="credentials" \
+		"$PWD/hooks/pre-command"
+
+	# assert
+	assert_failure
+	assert_output --partial "cluster-name input is required"
+
+	# cleanup
+	unstub git
+}
