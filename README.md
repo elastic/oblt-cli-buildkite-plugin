@@ -16,6 +16,8 @@ A Buildkite plugin to set up oblt-cli.
 | <nobr>`version-file`</nobr>  | `string` | -                  | The file to get the version from. If both `version` and `version-file` are provided, the plugin will use `version`. |
 | `username`                   | `string` | repository name    | The oblt-cli username. Defaults to the repository name derived from `BUILDKITE_REPO` (e.g. `my-project` from `git@github.com:acme-inc/my-project.git`), or `obltmachine` if `BUILDKITE_REPO` is not set. |
 | <nobr>`slack-channel`</nobr> | `string` | `#observablt-bots` | The slack channel for oblt-cli notifications                                                                        |
+| `command`                    | `string` | -                  | The command to run after setup. Supported value: `credentials`.                                                     |
+| <nobr>`cluster-name`</nobr>  | `string` | -                  | The cluster name. Required when `command` is `credentials`.                                                         |
 
 ## Usage
 
@@ -29,6 +31,31 @@ steps:
           version-file: .tool-versions
 
 ```
+
+### Credentials command
+
+Use `command: credentials` to fetch cluster credentials and export them as masked environment variables, equivalent to [oblt-actions/oblt-cli/cluster-credentials](https://github.com/elastic/oblt-actions/tree/main/oblt-cli/cluster-credentials).
+
+```yaml
+steps:
+  - command: curl -X GET $${ELASTICSEARCH_HOST}/_cluster/health -u $${ELASTICSEARCH_USERNAME}:$${ELASTICSEARCH_PASSWORD}
+    plugins:
+      - elastic/oblt-cli#v0.4.3:
+          command: credentials
+          cluster-name: edge-oblt
+
+```
+
+The following environment variables are exported and masked:
+
+- `ELASTIC_AGENT_STANDALONE_API_KEY`
+- `ELASTIC_APM_SERVER_URL`, `ELASTIC_APM_JS_SERVER_URL`, `ELASTIC_APM_JS_BASE_SERVER_URL`
+- `ELASTIC_APM_SECRET_TOKEN`, `ELASTIC_APM_API_KEY`
+- `ELASTICSEARCH_API_TOKEN`, `ELASTICSEARCH_HOSTS`, `ELASTICSEARCH_HOST`, `ELASTICSEARCH_USERNAME`, `ELASTICSEARCH_PASSWORD`
+- `FLEET_ELASTICSEARCH_HOST`, `FLEET_ENROLLMENT_TOKEN`, `FLEET_SERVER_SERVICE_TOKEN`, `FLEET_SERVER_POLICY_ID`, `FLEET_TOKEN_POLICY_NAME`, `FLEET_URL`
+- `INGEST_URL`
+- `KIBANA_HOST`, `KIBANA_HOSTS`, `KIBANA_FLEET_HOST`, `KIBANA_FLEET_USERNAME`, `KIBANA_FLEET_PASSWORD`, `KIBANA_USERNAME`, `KIBANA_PASSWORD`
+- `SYNTHETICS_API_KEY`
 
 ## GitHub Token
 This plugin requires the `VAULT_GITHUB_TOKEN`, which is set by default in Buildkite agents.

@@ -23,4 +23,10 @@ configuration:
     slack-channel:
       type: string
       description: The Slack channel to post notifications to
+    command:
+      type: string
+      description: The command to run after setup (e.g. credentials)
+    cluster-name:
+      type: string
+      description: The cluster name (required when command is credentials)
   additionalProperties: false

@@ -33,6 +33,18 @@ steps:
           version-file: .default-oblt-cli-version
     command: .buildkite/scripts/create-cluster.sh
 
+  - label: "E2E - Credentials (Linux AMD64)"
+    depends_on: create-cluster
+    agents:
+      provider: gcp
+    plugins:
+      - elastic/oblt-google-auth#v1.3.1:
+      - elastic/oblt-cli#${BUILDKITE_COMMIT}:
+          version-file: .default-oblt-cli-version
+          command: credentials
+          cluster-name: dev-oblt
+    command: 'curl -X GET "$${ELASTICSEARCH_HOST}/_cluster/health" -u "$${ELASTICSEARCH_USERNAME}:$${ELASTICSEARCH_PASSWORD}"'
+
   - label: "E2E - Get cluster name (Linux AMD64)"
     depends_on: create-cluster
     command: buildkite-agent meta-data get cluster-name
