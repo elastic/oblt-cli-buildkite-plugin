@@ -136,7 +136,7 @@ stub_git() {
 	# arrange
 	stub_git
 	stub oblt-cli \
-		"cluster secrets env --cluster-name my-cluster --output-file * : echo 'ELASTICSEARCH_HOST=http://es:9200' > \"\${8}\""
+		"cluster secrets env --cluster-name my-cluster --output-file * : echo 'ELASTICSEARCH_HOST=http://es:9200' > \"\${7}\""
 	stub buildkite-agent \
 		"redactor add * : echo 'masked'"
 
