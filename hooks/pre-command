@@ -29,10 +29,6 @@ OBLT_CLI_COMMAND="${BUILDKITE_PLUGIN_OBLT_CLI_COMMAND:-}"
 
 if [[ "${OBLT_CLI_COMMAND}" == "credentials" ]]; then
 	OBLT_CLI_CLUSTER_NAME="${BUILDKITE_PLUGIN_OBLT_CLI_CLUSTER_NAME:-}"
-	if [[ -z "${OBLT_CLI_CLUSTER_NAME}" ]]; then
-		>&2 echo "The cluster-name input is required when command is 'credentials'."
-		exit 1
-	fi
 	echo "~~~ :elastic-apm: Fetching credentials for cluster ${OBLT_CLI_CLUSTER_NAME}"
 	ENV_FILE=$(mktemp)
 	trap 'rm -f "${ENV_FILE}"' EXIT
