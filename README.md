@@ -38,7 +38,7 @@ Use `command: credentials` to fetch cluster credentials and export them as maske
 
 ```yaml
 steps:
-  - command: curl -X GET ${ELASTICSEARCH_HOST}/_cat/indices?v -u ${ELASTICSEARCH_USERNAME}:${ELASTICSEARCH_PASSWORD}
+  - command: curl -X GET $${ELASTICSEARCH_HOST}/_cluster/health -u $${ELASTICSEARCH_USERNAME}:$${ELASTICSEARCH_PASSWORD}
     plugins:
       - elastic/oblt-cli#v0.4.3:
           command: credentials
