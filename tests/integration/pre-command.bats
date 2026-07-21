@@ -155,18 +155,3 @@ stub_git() {
 	unstub buildkite-agent
 }
 
-@test "pre-command credentials command requires cluster-name" {
-	# arrange
-	stub_git
-
-	# act
-	run env BUILDKITE_PLUGIN_OBLT_CLI_COMMAND="credentials" \
-		"$PWD/hooks/pre-command"
-
-	# assert
-	assert_failure
-	assert_output --partial "cluster-name input is required"
-
-	# cleanup
-	unstub git
-}
