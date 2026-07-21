@@ -43,7 +43,7 @@ steps:
           version-file: .default-oblt-cli-version
           command: credentials
           cluster-name: dev-oblt
-    command: 'curl -X GET "${ELASTICSEARCH_HOST}/_cat/indices?v" -u "${ELASTICSEARCH_USERNAME}:${ELASTICSEARCH_PASSWORD}"'
+    command: 'curl -X GET "$${ELASTICSEARCH_HOST}/_cat/indices?v" -u "$${ELASTICSEARCH_USERNAME}:$${ELASTICSEARCH_PASSWORD}"'
 
   - label: "E2E - Get cluster name (Linux AMD64)"
     depends_on: create-cluster
