@@ -9,30 +9,33 @@ change-template: '- $TITLE by @$AUTHOR in #$NUMBER'
 category-template: '### $TITLE'
 categories:
   - title: '💥 Breaking Changes'
-    labels:
-      - 'changelog:breaking' # When a breaking change is introduced
+    when:
+      labels:
+        - 'changelog:breaking' # When a breaking change is introduced
+    semver-increment: major
   - title: '✨ Features'
-    labels:
-      - 'changelog:feature' # When a new feature is introduced
-      - 'changelog:enhancement' # When an existing feature is improved
+    when:
+      labels:
+        - 'changelog:feature' # When a new feature is introduced
+        - 'changelog:enhancement' # When an existing feature is improved
+    semver-increment: minor
   - title: '🐛 Bug Fixes'
-    labels:
-      - 'changelog:fix' # When a bug is fixed
+    when:
+      labels:
+        - 'changelog:fix' # When a bug is fixed
   - title: '📝 Documentation'
-    labels:
-      - 'changelog:docs' # When documentation is updated
+    when:
+      labels:
+        - 'changelog:docs' # When documentation is updated
   - title: '🧰 Maintenance'
-    labels:
-      - 'changelog:chore' # When a chore is done
-      - 'changelog:ci' # When CI is updated
-      - 'changelog:dependencies' # When dependencies are updated
-exclude-labels:
-  - 'changelog:skip' # When a PR should be excluded from the changelog
+    when:
+      labels:
+        - 'changelog:chore' # When a chore is done
+        - 'changelog:ci' # When CI is updated
+        - 'changelog:dependencies' # When dependencies are updated
+  - type: pre-exclude
+    when:
+      labels:
+        - 'changelog:skip' # When a PR should be excluded from the changelog
 version-resolver:
-  major:
-    labels:
-      - 'changelog:breaking'
-  minor:
-    labels:
-      - 'changelog:feature'
   default: patch
