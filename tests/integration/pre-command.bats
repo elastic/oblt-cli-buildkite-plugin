@@ -136,7 +136,7 @@ stub_git() {
 	# arrange
 	stub_git
 	stub oblt-cli \
-		"cluster secrets env --cluster-name my-cluster --output-file * : echo 'ELASTICSEARCH_HOST=http://es:9200' > \"\${7}\""
+		"cluster secrets env --cluster-name my-cluster --output-file * : echo 'ELASTICSEARCH_HOST=http://es:9200' > \"\${8}\""
 	stub buildkite-agent \
 		"redactor add * : echo 'masked'"
 
@@ -148,7 +148,7 @@ stub_git() {
 	# assert
 	assert_success
 	assert_output --partial "Fetching credentials for cluster my-cluster"
-
+	assert_output --partial "masked"
 	# cleanup
 	unstub git
 	unstub oblt-cli

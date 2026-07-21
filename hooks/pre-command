@@ -42,10 +42,12 @@ if [[ "${OBLT_CLI_COMMAND}" == "credentials" ]]; then
 		value="${line#*=}"
 		[[ -z "${key}" || "${key}" == \#* ]] && continue
 		if [[ -n "${value}" ]]; then
-			_secret_file=$(mktemp)
-			printf '%s' "${value}" > "${_secret_file}"
-			buildkite-agent redactor add "${_secret_file}"
-			rm -f "${_secret_file}"
+			(
+				_secret_file=$(mktemp)
+				trap 'rm -f "${_secret_file}"' EXIT
+				printf '%s' "${value}" > "${_secret_file}"
+				buildkite-agent redactor add "${_secret_file}"
+			)
 		fi
 		export "${key}=${value}"
 	done < "${ENV_FILE}"
