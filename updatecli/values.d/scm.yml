@@ -8,3 +8,7 @@ scm:
   user: obltmachine
   email: obltmachine@users.noreply.github.com
   # end update-compose policy values
+
+pull_request:
+  labels:
+    - changelog:dependencies
