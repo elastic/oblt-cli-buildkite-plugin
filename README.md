@@ -27,7 +27,7 @@ steps:
     agents:
       provider: gcp # currently only works on the gcp provider
     plugins:
-      - elastic/oblt-cli#v0.4.3:
+      - elastic/oblt-cli#v0.4.4:
           version-file: .tool-versions
 
 ```
@@ -40,7 +40,7 @@ Use `command: credentials` to fetch cluster credentials and export them as maske
 steps:
   - command: curl -X GET $${ELASTICSEARCH_HOST}/_cluster/health -u $${ELASTICSEARCH_USERNAME}:$${ELASTICSEARCH_PASSWORD}
     plugins:
-      - elastic/oblt-cli#v0.4.3:
+      - elastic/oblt-cli#v0.4.4:
           command: credentials
           cluster-name: edge-oblt
 
