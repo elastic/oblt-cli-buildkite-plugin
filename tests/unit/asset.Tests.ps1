@@ -90,7 +90,7 @@ Describe "Get-AssetId" {
 
 		# On Linux, auto-detected OS is linux/amd64 → id 176068054
 		Get-AssetId "7.3.0" | Should -Be 176068054
-		Assert-MockCalled Enable-Tls12 -Times 1 -Exactly
+		Should -Invoke Enable-Tls12 -Times 1 -Exactly
 	}
 
 	It "Should return Windows asset id when OS is Windows" {
@@ -102,7 +102,7 @@ Describe "Get-AssetId" {
 		Mock Get-Arch { return "amd64" }
 
 		Get-AssetId "7.3.0" | Should -Be 176068057
-		Assert-MockCalled Enable-Tls12 -Times 1 -Exactly
+		Should -Invoke Enable-Tls12 -Times 1 -Exactly
 	}
 }
 
@@ -123,8 +123,8 @@ Describe "Invoke-DownloadAsset" {
 
 		Test-Path (Join-Path $tmpDir.FullName "oblt-cli") | Should -BeTrue
 		$output | Should -Contain "Downloading oblt-cli asset URL: https://api.github.com/repos/elastic/observability-test-environments/releases/assets/176068054"
-		Assert-MockCalled Enable-Tls12 -Times 1 -Exactly
-		Assert-MockCalled Invoke-WebRequest -Times 1 -Exactly -ParameterFilter { $Uri -eq "https://api.github.com/repos/elastic/observability-test-environments/releases/assets/176068054" }
+		Should -Invoke Enable-Tls12 -Times 1 -Exactly
+		Should -Invoke Invoke-WebRequest -Times 1 -Exactly -ParameterFilter { $Uri -eq "https://api.github.com/repos/elastic/observability-test-environments/releases/assets/176068054" }
 
 		Remove-Item $tmpDir -Recurse -Force
 		Remove-Item $script:tarFile -Force
@@ -139,7 +139,7 @@ Describe "Invoke-DownloadAsset" {
 
 		Invoke-DownloadAsset "176068054" $tmpDir.FullName
 
-		Assert-MockCalled tar -Times 1 -Exactly -ParameterFilter { $args[0] -eq "--force-local" }
+		Should -Invoke tar -Times 1 -Exactly -ParameterFilter { $args[0] -eq "--force-local" }
 		Remove-Item $tmpDir -Recurse -Force
 	}
 
@@ -152,7 +152,7 @@ Describe "Invoke-DownloadAsset" {
 
 		Invoke-DownloadAsset "176068054" $tmpDir.FullName
 
-		Assert-MockCalled tar -Times 1 -Exactly -ParameterFilter { $args[0] -eq "-xzf" }
+		Should -Invoke tar -Times 1 -Exactly -ParameterFilter { $args[0] -eq "-xzf" }
 		Remove-Item $tmpDir -Recurse -Force
 	}
 
@@ -167,7 +167,7 @@ Describe "Invoke-DownloadAsset" {
 
 			Invoke-DownloadAsset "176068054" "C:\Users\buildkite\.oblt-cli\bin"
 
-			Assert-MockCalled tar -Times 1 -Exactly -ParameterFilter { $args[4] -eq "C:/Users/buildkite/.oblt-cli/bin" }
+			Should -Invoke tar -Times 1 -Exactly -ParameterFilter { $args[4] -eq "C:/Users/buildkite/.oblt-cli/bin" }
 		} finally {
 			$env:OS = $originalOs
 		}
