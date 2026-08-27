@@ -93,10 +93,14 @@ function download_asset() {
 	local -r asset_id=$1
 	local -r target_dir=$2
 	local temp_file
+	local -a curl_retry_args=(--retry 3 --retry-delay 0)
 	temp_file=$(mktemp)
 	trap 'rm -f "${temp_file:-}"' RETURN
+	if curl --help all 2>/dev/null | grep -q -- '--retry-all-errors'; then
+		curl_retry_args+=(--retry-all-errors)
+	fi
 	for attempt in 1 2 3; do
-		if curl -sLfL --retry 3 --retry-delay 0 --retry-all-errors \
+		if curl -sLfL "${curl_retry_args[@]}" \
 		-H "Accept: application/octet-stream" \
 		-H "Authorization: Bearer ${VAULT_GITHUB_TOKEN}" \
 		-H "X-GitHub-Api-Version: 2022-11-28" \
