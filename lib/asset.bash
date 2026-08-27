@@ -92,9 +92,21 @@ function get_asset_id() {
 function download_asset() {
 	local -r asset_id=$1
 	local -r target_dir=$2
-	curl -sL \
+	local temp_file
+	temp_file=$(mktemp)
+	trap 'rm -f "${temp_file}"' RETURN
+	for attempt in 1 2 3; do
+		if curl -sLfL --retry 3 --retry-all-errors \
 		-H "Accept: application/octet-stream" \
 		-H "Authorization: Bearer ${VAULT_GITHUB_TOKEN}" \
 		-H "X-GitHub-Api-Version: 2022-11-28" \
-		"https://api.github.com/repos/elastic/observability-test-environments/releases/assets/${asset_id}" | tar -xz -C "$target_dir"
+			"https://api.github.com/repos/elastic/observability-test-environments/releases/assets/${asset_id}" >"${temp_file}" &&
+			tar -xzf "${temp_file}" -C "$target_dir"; then
+			return 0
+		fi
+		>&2 echo "Artifact download failed (attempt ${attempt}/3), retrying..."
+	done
+
+	>&2 echo "Failed to download artifact after 3 attempts."
+	return 1
 }

@@ -134,14 +134,25 @@ function Invoke-DownloadAsset {
 	$tempFile = [System.IO.Path]::GetTempFileName()
 	$tarTargetDir = if ($env:OS -eq "Windows_NT") { $TargetDir -replace "\\", "/" } else { $TargetDir }
 	try {
-		Invoke-WebRequest `
-			-Uri $assetUrl `
-			-Headers $headers `
-			-OutFile $tempFile
-		if (Test-TarSupportsForceLocal) {
-			tar --force-local -xzf $tempFile -C $tarTargetDir
-		} else {
-			tar -xzf $tempFile -C $tarTargetDir
+		for ($attempt = 1; $attempt -le 3; $attempt++) {
+			try {
+				Invoke-WebRequest `
+					-Uri $assetUrl `
+					-Headers $headers `
+					-OutFile $tempFile
+				if (Test-TarSupportsForceLocal) {
+					tar --force-local -xzf $tempFile -C $tarTargetDir
+				} else {
+					tar -xzf $tempFile -C $tarTargetDir
+				}
+				return
+			} catch {
+				if ($attempt -eq 3) {
+					throw
+				}
+				Write-Warning "Artifact download failed (attempt $attempt/3), retrying..."
+				Start-Sleep -Seconds 1
+			}
 		}
 	} finally {
 		Remove-Item $tempFile -Force -ErrorAction SilentlyContinue
