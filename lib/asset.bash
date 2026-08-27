@@ -94,7 +94,7 @@ function download_asset() {
 	local -r target_dir=$2
 	local temp_file
 	temp_file=$(mktemp)
-	trap 'rm -f "${temp_file}"' RETURN
+	trap 'rm -f "${temp_file:-}"' RETURN
 	for attempt in 1 2 3; do
 		if curl -sLfL --retry 3 --retry-all-errors \
 		-H "Accept: application/octet-stream" \
