@@ -150,6 +150,7 @@ function Invoke-DownloadAsset {
 				if ($attempt -eq 3) {
 					throw
 				}
+				Remove-Item $tempFile -Force -ErrorAction SilentlyContinue
 				Write-Warning "Artifact download failed (attempt $attempt/3), retrying..."
 				Start-Sleep -Seconds 1
 			}

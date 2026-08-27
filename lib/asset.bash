@@ -96,7 +96,7 @@ function download_asset() {
 	temp_file=$(mktemp)
 	trap 'rm -f "${temp_file:-}"' RETURN
 	for attempt in 1 2 3; do
-		if curl -sLfL --retry 3 --retry-all-errors \
+		if curl -sLfL --retry 3 --retry-delay 0 --retry-all-errors \
 		-H "Accept: application/octet-stream" \
 		-H "Authorization: Bearer ${VAULT_GITHUB_TOKEN}" \
 		-H "X-GitHub-Api-Version: 2022-11-28" \
@@ -104,6 +104,7 @@ function download_asset() {
 			tar -xzf "${temp_file}" -C "$target_dir"; then
 			return 0
 		fi
+		rm -f "${temp_file}"
 		>&2 echo "Artifact download failed (attempt ${attempt}/3), retrying..."
 	done
 
