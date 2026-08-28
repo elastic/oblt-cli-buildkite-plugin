@@ -58,7 +58,29 @@ export VAULT_GITHUB_TOKEN="mock-token"
 	# arrange
 	tmp_dir=$(temp_make)
 	tar -czf "$tmp_dir/oblt-cli.tar.gz" --directory "$PWD/tests/fixtures" oblt-cli
-	stub curl "cat $tmp_dir/oblt-cli.tar.gz"
+	stub curl \
+		"--help all : echo '--retry-all-errors'" \
+		"cp $tmp_dir/oblt-cli.tar.gz \"\${!#}\""
+
+	# act
+	run download_asset "176068054" "$tmp_dir"
+
+	# assert
+	assert_success
+	assert_file_exist "$tmp_dir/oblt-cli"
+
+	# cleanup
+	unstub curl
+	temp_del "$tmp_dir"
+}
+
+@test "Download asset should not use --retry-all-errors when unsupported by curl" {
+	# arrange
+	tmp_dir=$(temp_make)
+	tar -czf "$tmp_dir/oblt-cli.tar.gz" --directory "$PWD/tests/fixtures" oblt-cli
+	stub curl \
+		"--help all : echo 'Usage: curl'" \
+		"cp $tmp_dir/oblt-cli.tar.gz \"\${!#}\""
 
 	# act
 	run download_asset "176068054" "$tmp_dir"
