@@ -60,7 +60,7 @@ export VAULT_GITHUB_TOKEN="mock-token"
 	tar -czf "$tmp_dir/oblt-cli.tar.gz" --directory "$PWD/tests/fixtures" oblt-cli
 	stub curl \
 		"--help all : echo '--retry-all-errors'" \
-		"cat $tmp_dir/oblt-cli.tar.gz"
+		"cp $tmp_dir/oblt-cli.tar.gz \"\${!#}\""
 
 	# act
 	run download_asset "176068054" "$tmp_dir"
@@ -80,7 +80,7 @@ export VAULT_GITHUB_TOKEN="mock-token"
 	tar -czf "$tmp_dir/oblt-cli.tar.gz" --directory "$PWD/tests/fixtures" oblt-cli
 	stub curl \
 		"--help all : echo 'Usage: curl'" \
-		"cat $tmp_dir/oblt-cli.tar.gz"
+		"cp $tmp_dir/oblt-cli.tar.gz \"\${!#}\""
 
 	# act
 	run download_asset "176068054" "$tmp_dir"

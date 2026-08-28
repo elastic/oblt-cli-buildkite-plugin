@@ -104,14 +104,15 @@ function download_asset() {
 		-H "Accept: application/octet-stream" \
 		-H "Authorization: Bearer ${VAULT_GITHUB_TOKEN}" \
 		-H "X-GitHub-Api-Version: 2022-11-28" \
-			"https://api.github.com/repos/elastic/observability-test-environments/releases/assets/${asset_id}" >"${temp_file}" &&
+			"https://api.github.com/repos/elastic/observability-test-environments/releases/assets/${asset_id}" \
+			--output "${temp_file}" &&
 			tar -xzf "${temp_file}" -C "$target_dir"; then
 			return 0
 		fi
 		rm -f "${temp_file}"
-		>&2 echo "Artifact download failed (attempt ${attempt}/3), retrying..."
+		>&2 echo "Artifact download or extraction failed (attempt ${attempt}/3), retrying..."
 	done
 
-	>&2 echo "Failed to download artifact after 3 attempts."
+	>&2 echo "Failed to download or extract artifact after 3 attempts."
 	return 1
 }

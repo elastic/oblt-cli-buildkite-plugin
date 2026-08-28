@@ -145,6 +145,9 @@ function Invoke-DownloadAsset {
 				} else {
 					tar -xzf $tempFile -C $tarTargetDir
 				}
+				if ($null -ne $LASTEXITCODE -and $LASTEXITCODE -ne 0) {
+					throw "tar extraction failed with exit code $LASTEXITCODE"
+				}
 				return
 			} catch {
 				if ($attempt -eq 3) {
