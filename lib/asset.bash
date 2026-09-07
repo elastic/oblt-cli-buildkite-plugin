@@ -99,20 +99,17 @@ function download_asset() {
 	if curl --help all 2>/dev/null | grep -q -- '--retry-all-errors'; then
 		curl_retry_args+=(--retry-all-errors)
 	fi
-	for attempt in 1 2 3; do
-		if curl -sLfL "${curl_retry_args[@]}" \
+	if ! curl -sLfL "${curl_retry_args[@]}" \
 		-H "Accept: application/octet-stream" \
-		-H "Authorization: Bearer ${VAULT_GITHUB_TOKEN}" \
+		-H "Authorization: ******" \
 		-H "X-GitHub-Api-Version: 2022-11-28" \
-			"https://api.github.com/repos/elastic/observability-test-environments/releases/assets/${asset_id}" \
-			--output "${temp_file}" &&
-			tar -xzf "${temp_file}" -C "$target_dir"; then
-			return 0
-		fi
-		rm -f "${temp_file}"
-		>&2 echo "Artifact download or extraction failed (attempt ${attempt}/3), retrying..."
-	done
-
-	>&2 echo "Failed to download or extract artifact after 3 attempts."
-	return 1
+		"https://api.github.com/repos/elastic/observability-test-environments/releases/assets/${asset_id}" \
+		--output "${temp_file}"; then
+		>&2 echo "Failed to download artifact."
+		return 1
+	fi
+	if ! tar -xzf "${temp_file}" -C "$target_dir"; then
+		>&2 echo "Failed to extract artifact."
+		return 1
+	fi
 }
