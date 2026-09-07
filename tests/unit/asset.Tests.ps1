@@ -156,6 +156,77 @@ Describe "Invoke-DownloadAsset" {
 		Remove-Item $tmpDir -Recurse -Force
 	}
 
+	It "Should retry when Invoke-WebRequest fails on first attempt" {
+		$tmpDir = New-Item -ItemType Directory -Path (Join-Path ([System.IO.Path]::GetTempPath()) "oblt-cli-test-$([System.Guid]::NewGuid().ToString())")
+		$script:webRequestAttempts = 0
+		Mock Enable-Tls12 {}
+		Mock Test-TarSupportsForceLocal { $false }
+		Mock Invoke-WebRequest {
+			param($Uri, $Headers, $OutFile)
+			$script:webRequestAttempts++
+			if ($script:webRequestAttempts -eq 1) {
+				throw "transient download failure"
+			}
+			Set-Content -Path $OutFile -Value "mock"
+		}
+		Mock tar {}
+		Mock Start-Sleep {}
+
+		Invoke-DownloadAsset "176068054" $tmpDir.FullName
+
+		Assert-MockCalled Invoke-WebRequest -Times 2 -Exactly
+		Assert-MockCalled tar -Times 1 -Exactly
+		Assert-MockCalled Start-Sleep -Times 1 -Exactly -ParameterFilter { $Seconds -eq 1 }
+		Remove-Item $tmpDir -Recurse -Force
+	}
+
+	It "Should retry when tar extraction fails on first attempt" {
+		$tmpDir = New-Item -ItemType Directory -Path (Join-Path ([System.IO.Path]::GetTempPath()) "oblt-cli-test-$([System.Guid]::NewGuid().ToString())")
+		$script:tarAttempts = 0
+		Mock Enable-Tls12 {}
+		Mock Test-TarSupportsForceLocal { $false }
+		Mock Invoke-WebRequest { param($Uri, $Headers, $OutFile) Set-Content -Path $OutFile -Value "mock" }
+		Mock tar {
+			$script:tarAttempts++
+			if ($script:tarAttempts -eq 1) {
+				throw "transient extraction failure"
+			}
+		}
+		Mock Start-Sleep {}
+
+		Invoke-DownloadAsset "176068054" $tmpDir.FullName
+
+		Assert-MockCalled Invoke-WebRequest -Times 2 -Exactly
+		Assert-MockCalled tar -Times 2 -Exactly
+		Assert-MockCalled Start-Sleep -Times 1 -Exactly -ParameterFilter { $Seconds -eq 1 }
+		Remove-Item $tmpDir -Recurse -Force
+	}
+
+	It "Should retry when tar exits non-zero on first attempt" {
+		$tmpDir = New-Item -ItemType Directory -Path (Join-Path ([System.IO.Path]::GetTempPath()) "oblt-cli-test-$([System.Guid]::NewGuid().ToString())")
+		$script:tarAttempts = 0
+		$global:LASTEXITCODE = 0
+		Mock Enable-Tls12 {}
+		Mock Test-TarSupportsForceLocal { $false }
+		Mock Invoke-WebRequest { param($Uri, $Headers, $OutFile) Set-Content -Path $OutFile -Value "mock" }
+		Mock tar {
+			$script:tarAttempts++
+			if ($script:tarAttempts -eq 1) {
+				$global:LASTEXITCODE = 2
+			} else {
+				$global:LASTEXITCODE = 0
+			}
+		}
+		Mock Start-Sleep {}
+
+		Invoke-DownloadAsset "176068054" $tmpDir.FullName
+
+		Assert-MockCalled Invoke-WebRequest -Times 2 -Exactly
+		Assert-MockCalled tar -Times 2 -Exactly
+		Assert-MockCalled Start-Sleep -Times 1 -Exactly -ParameterFilter { $Seconds -eq 1 }
+		Remove-Item $tmpDir -Recurse -Force
+	}
+
 	It "Should normalize Windows -C target dir separators for tar" {
 		$originalOs = $env:OS
 		try {

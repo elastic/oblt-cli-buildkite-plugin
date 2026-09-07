@@ -92,9 +92,24 @@ function get_asset_id() {
 function download_asset() {
 	local -r asset_id=$1
 	local -r target_dir=$2
-	curl -sL \
+	local temp_file
+	local -a curl_retry_args=(--retry 3 --retry-delay 0)
+	temp_file=$(mktemp)
+	trap 'rm -f "${temp_file:-}"' RETURN
+	if curl --help all 2>/dev/null | grep -q -- '--retry-all-errors'; then
+		curl_retry_args+=(--retry-all-errors)
+	fi
+	if ! curl -sLfL "${curl_retry_args[@]}" \
 		-H "Accept: application/octet-stream" \
 		-H "Authorization: Bearer ${VAULT_GITHUB_TOKEN}" \
 		-H "X-GitHub-Api-Version: 2022-11-28" \
-		"https://api.github.com/repos/elastic/observability-test-environments/releases/assets/${asset_id}" | tar -xz -C "$target_dir"
+		"https://api.github.com/repos/elastic/observability-test-environments/releases/assets/${asset_id}" \
+		--output "${temp_file}"; then
+		>&2 echo "Failed to download artifact."
+		return 1
+	fi
+	if ! tar -xzf "${temp_file}" -C "$target_dir"; then
+		>&2 echo "Failed to extract artifact."
+		return 1
+	fi
 }
