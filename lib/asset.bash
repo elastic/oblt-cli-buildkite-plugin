@@ -101,7 +101,7 @@ function download_asset() {
 	fi
 	if ! curl -sLfL "${curl_retry_args[@]}" \
 		-H "Accept: application/octet-stream" \
-		-H "Authorization: ******" \
+		-H "Authorization: Bearer ${VAULT_GITHUB_TOKEN}" \
 		-H "X-GitHub-Api-Version: 2022-11-28" \
 		"https://api.github.com/repos/elastic/observability-test-environments/releases/assets/${asset_id}" \
 		--output "${temp_file}"; then
