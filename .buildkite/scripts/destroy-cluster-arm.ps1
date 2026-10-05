@@ -3,4 +3,4 @@ $ErrorActionPreference = "Stop"
 Write-Output "--- Destroy cluster"
 $clusterName = & buildkite-agent meta-data get cluster-name-arm
 $env:OBLT_CLI_CLUSTER_NAME = $clusterName
-oblt-cli --% cluster destroy "--cluster-name=%OBLT_CLI_CLUSTER_NAME%"
+oblt-cli --% cluster destroy --force "--cluster-name=%OBLT_CLI_CLUSTER_NAME%"
